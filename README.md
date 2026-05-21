@@ -35,7 +35,7 @@
 
 ---
 
-## 🧠 `whoami`
+## `whoami`
 
 ```typescript
 const DaiyaanMuhammad = {
@@ -46,7 +46,7 @@ const DaiyaanMuhammad = {
   focus: [
     "Training a mini-Transformer for commit message generation",
     "Building 2D game engines from pure OpenGL",
-    "Raycasting engines because DOOM had the right idea",
+    "You get a web backend, You get a web backend, YOU ALL GET A WEB BACKEND!",
   ],
 
   stack: {
@@ -54,44 +54,12 @@ const DaiyaanMuhammad = {
     ml       : ["Python", "PyTorch", "HuggingFace", "RoPE", "GQA"],
     scripting: ["TypeScript", "Shell/Bash"],
     env      : ["Arch Linux", "AMD ROCm", "Neovim"],
+    web      : ["Spring Boot", "NextJS", "Java and it's script"]
   },
 
   philosophy: "Build it from scratch. Then build it again, better.",
 };
 ```
-
----
-
-## 🚀 Pinned Projects
-
-<div align="center">
-
-<!-- Row 1 -->
-<a href="https://github.com/DaiyaanMuhammadFardeen/Nyon">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=DaiyaanMuhammadFardeen&repo=Nyon&theme=tokyonight&hide_border=true&border_radius=12&show_owner=false&description_lines_count=2" />
-</a>
-<a href="https://github.com/DaiyaanMuhammadFardeen/Mini-Transfomer-From-Scratch">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=DaiyaanMuhammadFardeen&repo=Mini-Transfomer-From-Scratch&theme=tokyonight&hide_border=true&border_radius=12&show_owner=false&description_lines_count=2" />
-</a>
-
-<!-- Row 2 -->
-<a href="https://github.com/DaiyaanMuhammadFardeen/Raycaster-OpenGL">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=DaiyaanMuhammadFardeen&repo=Raycaster-OpenGL&theme=tokyonight&hide_border=true&border_radius=12&show_owner=false&description_lines_count=2" />
-</a>
-<a href="https://github.com/DaiyaanMuhammadFardeen/KhojAI">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=DaiyaanMuhammadFardeen&repo=KhojAI&theme=tokyonight&hide_border=true&border_radius=12&show_owner=false&description_lines_count=2" />
-</a>
-
-<!-- Row 3 -->
-<a href="https://github.com/DaiyaanMuhammadFardeen/Auto-Git-Handler-Hub">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=DaiyaanMuhammadFardeen&repo=Auto-Git-Handler-Hub&theme=tokyonight&hide_border=true&border_radius=12&show_owner=false&description_lines_count=2" />
-</a>
-
-</div>
-
----
-
-## ⚙️ Tech Stack
 
 <div align="center">
 
@@ -113,36 +81,12 @@ const DaiyaanMuhammad = {
 
 </div>
 
----
-
-## 📊 GitHub Stats
-
-<div align="center">
-
-<img src="https://github-readme-stats.vercel.app/api?username=DaiyaanMuhammadFardeen&show_icons=true&theme=tokyonight&hide_border=true&border_radius=12&count_private=true&include_all_commits=true&rank_icon=github&show=prs_merged_percentage" height="175"/>
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=DaiyaanMuhammadFardeen&layout=compact&theme=tokyonight&hide_border=true&border_radius=12&langs_count=8&exclude_repo=dristee9" height="175"/>
-
-</div>
-
-<div align="center">
-
-<img src="https://github-readme-streak-stats.herokuapp.com?user=DaiyaanMuhammadFardeen&theme=tokyonight&hide_border=true&border_radius=12&date_format=j%20M%5B%20Y%5D&mode=weekly" />
-
-</div>
-
----
-
-## 🏆 Trophy Case
-
 <div align="center">
 
 <img src="https://github-profile-trophy.vercel.app/?username=DaiyaanMuhammadFardeen&theme=tokyonight&no-frame=true&margin-w=8&margin-h=8&row=1&column=7" />
 
 </div>
 
----
-
-## 📈 Contribution Graph
 
 <div align="center">
 
@@ -150,19 +94,6 @@ const DaiyaanMuhammad = {
 
 </div>
 
----
-
-## 🎲 Today's Dev Wisdom
-
-<div align="center">
-
-<img src="https://readme-jokes.vercel.app/api?bgColor=%231a1b27&textColor=%23a9b1d6&aColor=%237EB8F7&borderColor=%232d333b&qColor=%23c0caf5" alt="Dev Joke" />
-
-</div>
-
----
-
-## 💬 Quote of the Day
 
 <div align="center">
 
@@ -170,40 +101,7 @@ const DaiyaanMuhammad = {
 
 </div>
 
----
-
-## 🐍 Contribution Snake
-
-> 🔧 To enable the snake animation, add this GitHub Action to `.github/workflows/snake.yml` in your profile repo:
->
-> ```yaml
-> name: Generate Snake
-> on:
->   schedule: [{ cron: "0 0 * * *" }]
->   workflow_dispatch:
-> jobs:
->   generate:
->     runs-on: ubuntu-latest
->     steps:
->       - uses: Platane/snk@v3
->         with:
->           github_user_name: DaiyaanMuhammadFardeen
->           outputs: |
->             dist/github-snake.svg?palette=github-dark
->       - uses: crazy-max/ghaction-github-pages@v3
->         with:
->           target_branch: output
->           build_dir: dist
->         env:
->           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-> ```
->
-> Then replace this block with:
-> ```
-> ![Snake](https://raw.githubusercontent.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen/output/github-snake.svg)
-> ```
-
----
+[Snake](https://raw.githubusercontent.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen/output/github-snake.svg)
 
 <div align="center">
 
