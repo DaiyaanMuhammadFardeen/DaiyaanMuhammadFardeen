@@ -101,7 +101,7 @@ const DaiyaanMuhammad = {
 
 </div>
 
-[Snake](https://raw.githubusercontent.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen/output/github-snake.svg)
+![Snake](https://raw.githubusercontent.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen/output/github-snake.svg)
 
 <div align="center">
 
