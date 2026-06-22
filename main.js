@@ -12,6 +12,7 @@
  *   7. GitHub API prefetch
  */
 
+import { initTheme, toggleTheme } from './theme.js';
 import { initLoading } from './loading.js';
 import { initNeuralBg } from './canvas/neural-bg.js';
 import { initCursorTrail } from './canvas/cursor-trail.js';
@@ -71,6 +72,14 @@ const updateScroll = () => {
 };
 window.addEventListener('scroll', updateScroll, { passive: true });
 
+/* ── Theme Toggle Keybinding ── */
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+    e.preventDefault();
+    toggleTheme();
+  }
+});
+
 /* ── Section Registry ── */
 const SECTION_INIT = {
   about:    initAbout,
@@ -126,6 +135,9 @@ async function prefetchGitHub() {
 
 /* ── Boot ── */
 async function boot() {
+  // 0. Init theme
+  initTheme();
+
   // 1. Loading screen
   await initLoading();
 
