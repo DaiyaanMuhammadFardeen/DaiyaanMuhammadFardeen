@@ -125,6 +125,7 @@ export function initHeroParticles(canvas) {
   let img = null;
   let imgW = 0;
   let imgH = 0;
+  let samples = [];
   let lastTime = 0;
   let rafId = null;
   let assemblyFraction = 0;
@@ -157,13 +158,18 @@ export function initHeroParticles(canvas) {
     if (loaded && portfolio.reducedMotion) {
       drawStaticImage();
     }
+
+    // Recalc particle targets on resize (scale/offset change with canvas size)
+    if (loaded && particles.length > 0) {
+      recalcTargets();
+    }
   }
 
   /* ---- Particle initialisation ---- */
 
   function initParticles() {
     const step = w < 768 ? MOBILE_STEP : DESKTOP_STEP;
-    const samples = sampleImagePixels(img, step);
+    samples = sampleImagePixels(img, step);
 
     // Fallback if sampling yields nothing
     if (samples.length === 0) {
@@ -180,6 +186,25 @@ export function initHeroParticles(canvas) {
 
     particles = samples.map((s) => createParticle(s, w, h, imgW, imgH));
     assemblyFraction = 0;
+  }
+
+  /* ---- Recalculate targets on resize ---- */
+
+  function recalcTargets() {
+    if (!loaded || samples.length === 0) return;
+    const scaleX = (w * 0.85) / imgW;
+    const scaleY = (h * 0.85) / imgH;
+    const scale = Math.min(scaleX, scaleY);
+    const offsetX = (w - imgW * scale) / 2;
+    const offsetY = (h - imgH * scale) / 2;
+    for (let i = 0; i < particles.length; i++) {
+      const s = samples[i];
+      if (!s) continue;
+      const tx = s.x * scale + offsetX;
+      const ty = s.y * scale + offsetY;
+      particles[i].origTargetX = tx;
+      particles[i].origTargetY = ty;
+    }
   }
 
   /* ---- Draw static image (reduced motion) ---- */
@@ -233,8 +258,9 @@ export function initHeroParticles(canvas) {
 
     frameCount++;
 
-    const mx = portfolio.mouse.x;
-    const my = portfolio.mouse.y;
+    // Normalized 0-1 → canvas pixel coordinates
+    const mx = portfolio.mouse.x * w;
+    const my = portfolio.mouse.y * h;
     const mouseActive = mx >= 0 && my >= 0;
 
     // Throttle mouse repulsion: only recalc every 3 frames
@@ -312,16 +338,26 @@ export function initHeroParticles(canvas) {
     // --- Render ---
     ctx.clearRect(0, 0, w, h);
 
-    // Draw faint connections between nearest arrived particles (max 50)
+    // Draw faint connections between randomly selected arrived particles
     const arrivedParticles = [];
     for (let i = 0; i < particles.length; i++) {
       if (particles[i].arrived) arrivedParticles.push(particles[i]);
     }
-    const connectionCount = Math.min(arrivedParticles.length, 50);
-    for (let i = 0; i < connectionCount; i++) {
+    const maxConnections = Math.min(arrivedParticles.length, 50);
+    // Randomly sample for distributed connections (avoids first-N bias)
+    const connected = [];
+    if (arrivedParticles.length > 0) {
+      const pool = [...arrivedParticles];
+      for (let i = 0; i < maxConnections; i++) {
+        const idx = Math.floor(Math.random() * pool.length);
+        connected.push(pool[idx]);
+        pool.splice(idx, 1);
+      }
+    }
+    for (let i = 0; i < connected.length; i++) {
       const a = arrivedParticles[i];
-      for (let j = i + 1; j < connectionCount; j++) {
-        const b = arrivedParticles[j];
+      for (let j = i + 1; j < connected.length; j++) {
+        const b = connected[j];
         const dx = a.x - b.x;
         const dy = a.y - b.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
