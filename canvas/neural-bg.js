@@ -161,15 +161,24 @@ export function initNeuralBg() {
   function resize() {
     w = window.innerWidth;
     h = window.innerHeight;
-    canvas.width = w * (window.devicePixelRatio || 1);
-    canvas.height = h * (window.devicePixelRatio || 1);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
-    ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     clearGradientCache();
 
+    // Set device info on portfolio
+    if (!window.portfolio) window.portfolio = {};
+    window.portfolio.isMobile = w < 768;
+    portfolio.isMobile = w < 768;
+
     if (!initialised) {
-      const count = CONFIG.nodeCount.min + Math.floor(Math.random() * (CONFIG.nodeCount.max - CONFIG.nodeCount.min + 1));
+      const isMobile = w < 768;
+      const minCount = isMobile ? 30 : 60;
+      const maxCount = isMobile ? 40 : 80;
+      const count = minCount + Math.floor(Math.random() * (maxCount - minCount + 1));
       nodes = [];
       for (let i = 0; i < count; i++) {
         nodes.push(createNode(w, h));
@@ -234,8 +243,21 @@ export function initNeuralBg() {
       return;
     }
 
+    // Pause RAF when tab is hidden
+    if (document.hidden) {
+      lastTime = 0;
+      rafId = requestAnimationFrame(loop);
+      return;
+    }
+
     const dt = lastTime ? Math.min((timestamp - lastTime) / 16.667, 3) : 1;
     lastTime = timestamp;
+
+    // Frame-skip: skip draw on very small dt to reduce GPU load
+    if (dt < 0.5) {
+      rafId = requestAnimationFrame(loop);
+      return;
+    }
 
     const scrollFraction = document.body.scrollHeight > window.innerHeight
       ? portfolio.scroll / (document.body.scrollHeight - window.innerHeight)
@@ -307,8 +329,9 @@ export function initNeuralBg() {
       spatial.insert(nodes[i]);
     }
 
-    // Connections via spatial hash
+    // Connections via spatial hash — capped at 300 closest
     const drawn = new Set();
+    const connections = [];
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i];
       const nearby = spatial.getNearby(a.x, a.y, CONFIG.connectionRange);
@@ -324,16 +347,24 @@ export function initNeuralBg() {
         const dy = a.y - b.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < CONFIG.connectionRange) {
-          const opacity = (1 - dist / CONFIG.connectionRange) * CONFIG.connectionOpacity;
-          const colorHex = COLORS[a.color]();
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = hexToRgba(colorHex, opacity);
-          ctx.lineWidth = CONFIG.connectionWidth;
-          ctx.stroke();
+          connections.push({ a, b, dist });
         }
       }
+    }
+
+    // Draw closest connections first, max 300
+    connections.sort((a, b) => a.dist - b.dist);
+    const maxDraw = Math.min(connections.length, 300);
+    for (let k = 0; k < maxDraw; k++) {
+      const { a, b, dist } = connections[k];
+      const opacity = (1 - dist / CONFIG.connectionRange) * CONFIG.connectionOpacity;
+      const colorHex = COLORS[a.color]();
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = hexToRgba(colorHex, opacity);
+      ctx.lineWidth = CONFIG.connectionWidth;
+      ctx.stroke();
     }
 
     // Draw nodes
