@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indexing>
+ <paragraph index="9" node_type="writer">Daiyaan Muhammad Fardeen</paragraph>
+ <paragraph index="10" node_type="writer">daiyaan.muhammad2002@gmail.com | +8801518972324 | Nandipara, Dhaka | LinkedIn | GitHub</paragraph>
+ <paragraph index="12" node_type="writer">EXPERIENCE</paragraph>
+ <paragraph index="13" node_type="writer">Daffodil International University	Dec 2023 – Dec 2024</paragraph>
+ <paragraph index="14" node_type="writer">Student Associate	Dhaka</paragraph>
+ <paragraph index="15" node_type="writer">As a Student Associate at Daffodil International University, I have effectively managed administrative duties and taken on key responsibilities in this role. I ensured that all tasks were completed efficiently and accurately, providing critical support to my superiors.</paragraph>
+ <paragraph index="16" node_type="writer">• Developed and implemented efficient administrative processes, leveraging web data scraping and Google Sheets automation via Apps Script to streamline office operations.</paragraph>
+ <paragraph index="17" node_type="writer">• Developed visual content, including posters and banners, to enhance university event promotions and internal communications.</paragraph>
+ <paragraph index="18" node_type="writer">• Led a group of 10 students through instruction in Python and introductory Machine Learning concepts, achieving a tailored learning experience that met individual needs.</paragraph>
+ <paragraph index="19" node_type="writer">• Spearheaded the university's alignment with 17 UN SDGs by conducting comprehensive protocol analysis.</paragraph>
+ <paragraph index="21" node_type="writer">As Sunnah Foundation	Jun 2022 – Jun 2022</paragraph>
+ <paragraph index="22" node_type="writer">Voluntary Relief Distributor	Aftabnagar, Dhaka</paragraph>
+ <paragraph index="23" node_type="writer">During the devastating June 2022 flooding in Sylhet, I successfully oversaw the distribution of essential goods to affected areas, ensuring fair and equitable allocation. My responsibilities included coordinating logistics and managing inventory to maximize impact. By doing so, we were able to provide vital support to those in need during a time of crisis.</paragraph>
+ <paragraph index="25" node_type="writer">EDUCATION</paragraph>
+ <paragraph index="26" node_type="writer">Daffodil International University	May 2022 – Jun 2026</paragraph>
+ <paragraph index="27" node_type="writer">Bachelors of Science in Computer Science and Engineering	GPA: 3.73//4.0</paragraph>
+ <paragraph index="28" node_type="writer">• With 4 years of education at this esteemed educational institution, I developed expertise in research, collaboration, and project management while driving innovative outcomes. I successfully led projects and labwork, consistently outperforming my peers and demonstrating strong leadership skills.</paragraph>
+ <paragraph index="29" node_type="writer">• Successfully managed a large-scale conference for AWS Cloud Practitioners, providing critical IT support to ensure seamless event execution and delivery.</paragraph>
+ <paragraph index="30" node_type="writer">• Achieved a second-place ranking at the 2024 AI Prompt Battle contest</paragraph>
+ <paragraph index="31" node_type="writer">• Led a fundraising effort as Treasurer of the DIU Esports club, securing grants for a gaming competition.</paragraph>
+ <paragraph index="33" node_type="writer">Sabujbagh Government College	Jul 2019 – Jul 2021</paragraph>
+ <paragraph index="34" node_type="writer">High School Certificate in Science	GPA: 5.0//5.0</paragraph>
+ <paragraph index="35" node_type="writer">• As an active participant in my college's Science Club, I contributed to a collaborative environment while engaging in extracurricular activities and fostering strong relationships with educators and peers through team-building sports events.</paragraph>
+ <paragraph index="37" node_type="writer">SKILLS</paragraph>
+ <paragraph index="38" node_type="writer">• Languages: Python; Java; Javascript; Typescript; HTML; CSS; C++17; Bash; Dart; Kotlin</paragraph>
+ <paragraph index="39" node_type="writer">• Frameworks and Technologies: Spring Boot; PyTorch; PostgreSQL; OpenGL; NextJS; Flutter; MongoDB; Ollama; React; FastAPI; MySQL; Google Appscript; Git</paragraph>
+ <paragraph index="40" node_type="writer">• Technical: Microservices Architecture; Web Development; Scripting Languages; AI and Machine Learning; RESTful APIs; Data Analysis; API Development; Performance Optimization; Multithreading; System Design; Debugging; Mobile App Development; Version Control; Database Management; Object-Oriented Programming; Software Development; Algorithms; System Architecture; Docker; Event-Driven Architecture; Github; Modern Stack</paragraph>
+ <paragraph index="42" node_type="writer">PROJECTS</paragraph>
+ <paragraph index="43" node_type="writer">CVTailor	</paragraph>
+ <paragraph index="44" node_type="writer">Apr 2026	FastAPI, Ollama, pgVector</paragraph>
+ <paragraph index="45" node_type="writer">CVTailor is an AI-powered CV tailoring engine that allows users to upload their CV, and paste a job description to automatically generate a semantically optimized, ATS-friendly version.</paragraph>
+ <paragraph index="46" node_type="writer">• Built a robust skills RAG system with 14,260+ skill embeddings (pgvector) sourced from ESCO, Tanova, and custom hierarchies, enabling vector similarity search, gap analysis, auto-fill, and related skill suggestions.</paragraph>
+ <paragraph index="47" node_type="writer">• Designed and implemented an asynchronous tailoring pipeline with Celery + Redis, incorporating CV normalization (NuExtract), multi-section rewriting (Llama 3.1), composite scoring (ATS, semantic, structural, readability), and transparent diff generation.</paragraph>
+ <paragraph index="48" node_type="writer">• Created intelligent agents for JD parsing, skill resolution, bullet improvement (SSE streaming), and AI co-pilot evaluation, with full support for reversible changes and user-controlled acceptance.</paragraph>
+ <paragraph index="49" node_type="writer">• Developed a full-stack application using FastAPI (REST + SSE), Next.js 16 dashboard, PostgreSQL with pgvector, JWT authentication (httpOnly cookies), and DOCX/JSON export functionality.</paragraph>
+ <paragraph index="50" node_type="writer">• Engineered production-ready features including Docker Compose deployment, Alembic migrations, interactive skill seeder, real-time progress tracking, and comprehensive scoring with weighted categories.</paragraph>
+ <paragraph index="52" node_type="writer">Vibecost	</paragraph>
+ <paragraph index="53" node_type="writer">Jun 2026 	PythonCLI, TikToken, HF Transformers</paragraph>
+ <paragraph index="54" node_type="writer">Vibecost is a command-line tool that helps developers estimate token usage, simulate costs, and predict AI agent behavior before running expensive LLM calls. It accurately scans projects, counts tokens using real tokenizers (tiktoken + HuggingFace), simulates multi-turn agent loops with reasoning tokens, and provides detailed cost breakdowns across 15 major models (OpenAI, Anthropic, Google, DeepSeek, etc.). Key features include prompt prediction (files + MCP tools), visual cost comparison and context pressure visualization</paragraph>
+ <paragraph index="55" node_type="writer">• Created a smart prompt prediction engine that analyzes queries to recommend relevant files (keyword + content relevance scoring) and MCP tools (read/edit/write, grep, bash, etc.) with estimated token costs</paragraph>
+ <paragraph index="57" node_type="writer">NYON Engine	</paragraph>
+ <paragraph index="58" node_type="writer">Jan 2026 	ECS Architecture, OpenGL, C++17</paragraph>
+ <paragraph index="59" node_type="writer">Nyon is a high-performance 2D game engine featuring GPU-instanced rendering, a custom rigid-body physics engine, and an advanced particle system.</paragraph>
+ <paragraph index="60" node_type="writer">• Created a high-performance GPU-instanced OpenGL 4.6 renderer using persistent-mapped buffers, triple-buffering, and GLsync fences for efficient rendering of thousands of objects and up to 4 million particles.</paragraph>
+ <paragraph index="61" node_type="writer">• Engineered a multi-threaded architecture with a work-stealing ThreadPool, parallelizing broad-phase queries, narrow-phase collisions, physics solving, and particle updates.</paragraph>
+ <paragraph index="62" node_type="writer">• Developed four fully playable game demos (Breakout, Flappy Bird, Physics Sandbox, Tower Stack) showcasing core engine systems including input handling, camera following, and particle effects.</paragraph>
+ <paragraph index="64" node_type="writer">KhojAI	</paragraph>
+ <paragraph index="65" node_type="writer">Oct 2025 	Spring Boot, NextJS+Flutter, Advanced NLP</paragraph>
+ <paragraph index="66" node_type="writer">KhojAI is an intelligent, AI-powered search and chat application that combines a local LLM (Ollama) with real-time web search to deliver context-aware, factually grounded responses.</paragraph>
+ <paragraph index="67" node_type="writer">• Architected a multi-service system with Java Spring Boot backend (REST + SSE), Python FastAPI AI engine, Next.js web frontend, and Flutter mobile application.</paragraph>
+ <paragraph index="68" node_type="writer">• Built a sophisticated AI pipeline featuring hybrid prompt analysis (spaCy + KeyBERT + Ollama), intent detection (33 categories), intelligent query generation, concurrent web scraping (3 strategies), BM25 ranking, and token-streaming responses.</paragraph>
+ <paragraph index="69" node_type="writer">• Implemented real-time SSE streaming with 9 structured event types for live search progress visualization, partial response rendering, and smooth user experience.</paragraph>
+ <paragraph index="70" node_type="writer">• Engineered robust backend features including JWT authentication (ready-to-activate), PostgreSQL integration with JPA/Hibernate, reactive WebClient proxying, circuit breakers, and disk caching.</paragraph>
+ <paragraph index="72" node_type="writer">Mini-Commit Transformer</paragraph>
+ <paragraph index="73" node_type="writer">Oct 2025 	Pytorch, Unigram+BPE, AI Algorithms</paragraph>
+ <paragraph index="74" node_type="writer">Mini-Commit Transformer is a compact Encoder-Decoder Transformer (36.6M parameters) trained entirely from scratch to automatically generate meaningful commit messages from code diffs.</paragraph>
+ <paragraph index="75" node_type="writer">• Developed novel architectural components including DiffEmbedding for injecting change-type features</paragraph>
+ <paragraph index="76" node_type="writer">• Engineered a highly memory-efficient training pipeline featuring mixed-precision (bfloat16), gradient checkpointing, gradient accumulation, curriculum learning, BucketBatchSampler, and EMA — enabling training on consumer-grade GPUs (e.g., AMD RX 6600).</paragraph>
+ <paragraph index="77" node_type="writer">• Conducted comprehensive inference benchmarking across 13 decoding strategies (Beam Search, Top-p, Top-k, Typical Sampling, etc.)</paragraph>
+</indexing>
