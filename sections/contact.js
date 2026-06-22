@@ -96,7 +96,7 @@ function buildFormHTML() {
 
   const emailLink = document.createElement('a');
   emailLink.className = 'contact-social__link';
-  emailLink.href = 'mailto:daiyaan@example.com';
+  emailLink.href = 'mailto:daiyaan.muhammad2002@gmail.com';
   emailLink.textContent = '[email]';
   emailLink.dataset.cursorLabel = 'SEND';
   makeMagnetic(emailLink, { strength: 0.25 });
