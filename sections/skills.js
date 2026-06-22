@@ -5,33 +5,59 @@
 export function initSkills() {
   const canvas = document.getElementById('skills-canvas');
   if (!canvas) return;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
   const isReduced = window.portfolio?.reducedMotion ?? false;
 
+  // Responsive sizing
+  const isMobile = window.innerWidth < 768;
+  const scale = isMobile ? 0.5 : 1.0;
+
   // ── Data ────────────────────────────────────────────
 
   const skills = [
-    { name: 'Python', category: 'language', level: 95, x: 0, y: 0, z: 0 },
-    { name: 'C++', category: 'language', level: 85, x: 200, y: 80, z: -50 },
-    { name: 'Rust', category: 'language', level: 75, x: -150, y: 120, z: 100 },
-    { name: 'Go', category: 'language', level: 72, x: 180, y: -90, z: 150 },
-    { name: 'TypeScript', category: 'language', level: 78, x: -200, y: -60, z: -100 },
-    { name: 'PyTorch', category: 'ai', level: 90, x: 60, y: -180, z: 80 },
-    { name: 'Transformers', category: 'ai', level: 85, x: -80, y: -200, z: -40 },
-    { name: 'vLLM', category: 'ai', level: 70, x: 120, y: -150, z: 200 },
-    { name: 'ROCm', category: 'ai', level: 65, x: -180, y: -120, z: 160 },
-    { name: 'Embeddings', category: 'ai', level: 80, x: 0, y: -250, z: 0 },
-    { name: 'OpenGL', category: 'systems', level: 82, x: 250, y: 50, z: -180 },
-    { name: 'ECS', category: 'systems', level: 88, x: -250, y: 80, z: -80 },
-    { name: 'GPU Compute', category: 'systems', level: 72, x: 150, y: 200, z: -200 },
-    { name: 'Linux', category: 'systems', level: 90, x: -100, y: 180, z: 200 },
-    { name: 'FastAPI', category: 'backend', level: 85, x: -60, y: 250, z: -50 },
-    { name: 'PostgreSQL', category: 'backend', level: 80, x: 200, y: 220, z: 100 },
-    { name: 'Redis', category: 'backend', level: 75, x: -220, y: 200, z: -150 },
-    { name: 'Docker', category: 'backend', level: 70, x: 100, y: 280, z: 200 },
+    { name: 'Python', category: 'language', level: 95, x: 0 * scale, y: 0 * scale, z: 0 * scale },
+    { name: 'C++', category: 'language', level: 85, x: 200 * scale, y: 80 * scale, z: -50 * scale },
+    { name: 'Rust', category: 'language', level: 75, x: -150 * scale, y: 120 * scale, z: 100 * scale },
+    { name: 'Go', category: 'language', level: 72, x: 180 * scale, y: -90 * scale, z: 150 * scale },
+    { name: 'TypeScript', category: 'language', level: 78, x: -200 * scale, y: -60 * scale, z: -100 * scale },
+    { name: 'PyTorch', category: 'ai', level: 90, x: 60 * scale, y: -180 * scale, z: 80 * scale },
+    { name: 'Transformers', category: 'ai', level: 85, x: -80 * scale, y: -200 * scale, z: -40 * scale },
+    { name: 'vLLM', category: 'ai', level: 70, x: 120 * scale, y: -150 * scale, z: 200 * scale },
+    { name: 'ROCm', category: 'ai', level: 65, x: -180 * scale, y: -120 * scale, z: 160 * scale },
+    { name: 'Embeddings', category: 'ai', level: 80, x: 0 * scale, y: -250 * scale, z: 0 * scale },
+    { name: 'OpenGL', category: 'systems', level: 82, x: 250 * scale, y: 50 * scale, z: -180 * scale },
+    { name: 'ECS', category: 'systems', level: 88, x: -250 * scale, y: 80 * scale, z: -80 * scale },
+    { name: 'GPU Compute', category: 'systems', level: 72, x: 150 * scale, y: 200 * scale, z: -200 * scale },
+    { name: 'Linux', category: 'systems', level: 90, x: -100 * scale, y: 180 * scale, z: 200 * scale },
+    { name: 'FastAPI', category: 'backend', level: 85, x: -60 * scale, y: 250 * scale, z: -50 * scale },
+    { name: 'PostgreSQL', category: 'backend', level: 80, x: 200 * scale, y: 220 * scale, z: 100 * scale },
+    { name: 'Redis', category: 'backend', level: 75, x: -220 * scale, y: 200 * scale, z: -150 * scale },
+    { name: 'Docker', category: 'backend', level: 70, x: 100 * scale, y: 280 * scale, z: 200 * scale },
+    // ── New skills from resume ────────────────────────
+    { name: 'Java', category: 'language', level: 75, x: 300 * scale, y: 60 * scale, z: 120 * scale },
+    { name: 'JavaScript', category: 'language', level: 80, x: -80 * scale, y: 40 * scale, z: -300 * scale },
+    { name: 'Dart', category: 'language', level: 60, x: -320 * scale, y: -40 * scale, z: 80 * scale },
+    { name: 'Kotlin', category: 'language', level: 60, x: 120 * scale, y: -60 * scale, z: -280 * scale },
+    { name: 'HTML', category: 'language', level: 85, x: -260 * scale, y: -140 * scale, z: -60 * scale },
+    { name: 'CSS', category: 'language', level: 82, x: 280 * scale, y: -180 * scale, z: 40 * scale },
+    { name: 'Bash', category: 'systems', level: 72, x: 180 * scale, y: 240 * scale, z: -160 * scale },
+    { name: 'Spring Boot', category: 'backend', level: 70, x: -160 * scale, y: 300 * scale, z: 60 * scale },
+    { name: 'Next.js', category: 'backend', level: 72, x: 300 * scale, y: 260 * scale, z: 140 * scale },
+    { name: 'Flutter', category: 'backend', level: 65, x: -300 * scale, y: 180 * scale, z: -140 * scale },
+    { name: 'React', category: 'backend', level: 78, x: 40 * scale, y: 340 * scale, z: -40 * scale },
+    { name: 'MySQL', category: 'backend', level: 75, x: 260 * scale, y: 200 * scale, z: -200 * scale },
+    { name: 'MongoDB', category: 'backend', level: 70, x: -240 * scale, y: -260 * scale, z: 80 * scale },
+    { name: 'Ollama', category: 'ai', level: 78, x: 240 * scale, y: -100 * scale, z: -180 * scale },
+    { name: 'Microservices', category: 'backend', level: 68, x: -200 * scale, y: -280 * scale, z: -100 * scale },
+    { name: 'System Design', category: 'systems', level: 75, x: -180 * scale, y: -200 * scale, z: 280 * scale },
+    { name: 'Algorithms', category: 'systems', level: 80, x: 60 * scale, y: 140 * scale, z: -250 * scale },
+    { name: 'Multithreading', category: 'systems', level: 78, x: -120 * scale, y: 60 * scale, z: 300 * scale },
+    { name: 'Event-Driven', category: 'backend', level: 65, x: 200 * scale, y: -240 * scale, z: -240 * scale },
   ];
 
   const CATEGORY_COLORS = {
@@ -66,7 +92,7 @@ export function initSkills() {
   let tooltipEl = null;
 
   // Size
-  let w, h, centerX, centerY, scale;
+  let w, h, centerX, centerY, pxScale;
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -75,8 +101,8 @@ export function initSkills() {
     h = canvas.height = rect.height * dpr;
     centerX = w / 2;
     centerY = h / 2;
-    scale = dpr;
-    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    pxScale = dpr;
+    ctx.setTransform(pxScale, 0, 0, pxScale, 0, 0);
     // Reset CSS size
     canvas.style.width = rect.width + 'px';
     canvas.style.height = rect.height + 'px';
@@ -104,8 +130,8 @@ export function initSkills() {
   function project(x, y, z) {
     const factor = FOV / (z + FOV);
     return {
-      sx: x * factor + centerX / scale,
-      sy: y * factor + centerY / scale,
+      sx: x * factor + centerX / pxScale,
+      sy: y * factor + centerY / pxScale,
       factor,
     };
   }
@@ -114,7 +140,7 @@ export function initSkills() {
 
   function draw() {
     if (!running) return;
-    ctx.clearRect(0, 0, w / scale, h / scale);
+    ctx.clearRect(0, 0, w / pxScale, h / pxScale);
 
     // Apply inertia to rotation
     if (!isDragging) {
@@ -281,8 +307,8 @@ export function initSkills() {
 
   function getNodeAt(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
-    const mx = (clientX - rect.left) * scale;
-    const my = (clientY - rect.top) * scale;
+    const mx = (clientX - rect.left) * pxScale;
+    const my = (clientY - rect.top) * pxScale;
 
     // Transform all nodes with current rotation
     const projected = skills.map((node) => {
@@ -297,8 +323,8 @@ export function initSkills() {
     for (const node of projected) {
       const { sx, sy } = node.proj;
       const radius = ((node.level / 100) * 12 + 4) * 1.5; // use hover scale for hit area
-      const dx = mx / scale - sx;
-      const dy = my / scale - sy;
+      const dx = mx / pxScale - sx;
+      const dy = my / pxScale - sy;
       if (dx * dx + dy * dy < radius * radius) {
         return node;
       }
