@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Daiyaan Muhammad Fardeen — AI Engineer, Systems Programmer, Thesis Researcher" />
+  <meta name="theme-color" content="#05050f" />
+  <title>Daiyaan Muhammad Fardeen</title>
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen" aria-hidden="true">
+    <div class="boot-sequence"></div>
+  </div>
+
+  <!-- Neural Background Canvas -->
+  <canvas id="neural-bg" aria-hidden="true"></canvas>
+
+  <!-- Custom Cursor Canvas -->
+  <canvas id="cursor-canvas" aria-hidden="true"></canvas>
+
+  <!-- Matrix Rain Overlay -->
+  <canvas id="matrix-overlay" aria-hidden="true" style="display:none;"></canvas>
+
+  <!-- Main Content -->
+  <main id="portfolio">
+
+    <!-- Hero Section -->
+    <section id="hero" class="section">
+      <canvas id="hero-particles" aria-hidden="true"></canvas>
+      <div class="hero__content">
+        <div class="hero__eyebrow" id="hero-eyebrow">DAIYAAN MUHAMMAD FARDEEN</div>
+        <div class="hero__display" id="hero-display">
+          <span class="typewriter-text" data-text="I BUILD"></span>
+          <span class="typewriter-text" data-text="THINKING"></span>
+          <span class="typewriter-text" data-text="MACHINES."></span>
+        </div>
+        <div class="hero__subtitle" id="hero-subtitle">
+          <span>AI Engineer · Systems Programmer · Thesis Researcher</span>
+          <span style="display:block; color: var(--text-muted); font-size: 0.8em; margin-top: 4px;">Dhaka, Bangladesh</span>
+        </div>
+        <div class="hero__cta" id="hero-cta">
+          <button class="btn-ghost" data-scroll-to="projects" data-cursor-label="VIEW">[ view_work ]</button>
+          <button class="btn-ghost btn-ghost--magenta" data-href="https://github.com/DaiyaanMuhammadFardeen/commit-msg-transformer" data-cursor-label="READ">[ read_thesis ]</button>
+        </div>
+      </div>
+      <div class="hero__scroll-indicator" id="scroll-indicator">
+        <div class="hero__scroll-line"></div>
+        <span>↓ scroll to explore ↓</span>
+      </div>
+    </section>
+
+    <!-- Signal Divider 1 -->
+    <div class="signal-divider" aria-hidden="true">
+      <span class="signal-divider__node">◈</span>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+      <div class="section__inner">
+        <div class="section-header">
+          <span class="section-eyebrow">// section 1 of 5</span>
+          <h2 class="section-title" data-glitch="true">about.me</h2>
+          <span class="section-subtitle">interactive terminal — try typing</span>
+        </div>
+        <div class="about-section-grid" style="display:grid; grid-template-columns: 3fr 2fr; gap: 32px; align-items: start;">
+          <div class="about-terminal" id="about-terminal">
+            <div class="about-terminal__titlebar">
+              <div class="about-terminal__dots">
+                <span class="about-terminal__dot about-terminal__dot--red"></span>
+                <span class="about-terminal__dot about-terminal__dot--yellow"></span>
+                <span class="about-terminal__dot about-terminal__dot--green"></span>
+              </div>
+              <div class="about-terminal__title">daiyaan@neural-os: ~/about</div>
+            </div>
+            <div class="about-terminal__body scanlines" id="about-terminal-body"></div>
+          </div>
+          <div class="fact-grid" id="fact-grid">
+            <!-- injected by about.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Signal Divider 2 -->
+    <div class="signal-divider" aria-hidden="true">
+      <span class="signal-divider__node">◈</span>
+    </div>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+      <div class="section__inner">
+        <div class="section-header">
+          <span class="section-eyebrow">// section 2 of 5</span>
+          <h2 class="section-title" data-glitch="true">skills.constellation</h2>
+          <span class="section-subtitle">drag to rotate · hover to inspect</span>
+        </div>
+        <canvas id="skills-canvas" class="skills-canvas" aria-hidden="true"></canvas>
+        <div class="skills-legend" id="skills-legend">
+          <span class="skills-legend__item"><span class="skills-legend__dot" style="background:var(--accent-cyan);"></span> Languages</span>
+          <span class="skills-legend__item"><span class="skills-legend__dot" style="background:var(--accent-magenta);"></span> AI / ML</span>
+          <span class="skills-legend__item"><span class="skills-legend__dot" style="background:var(--accent-green);"></span> Systems</span>
+          <span class="skills-legend__item"><span class="skills-legend__dot" style="background:var(--accent-amber);"></span> Backend</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Signal Divider 3 -->
+    <div class="signal-divider" aria-hidden="true">
+      <span class="signal-divider__node">◈</span>
+    </div>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+      <div class="section__inner">
+        <div class="section-header">
+          <span class="section-eyebrow">// section 3 of 5</span>
+          <h2 class="section-title" data-glitch="true">projects.log</h2>
+          <span class="section-subtitle" id="projects-status">fetching from api.github.com...</span>
+        </div>
+        <div class="projects-grid" id="projects-grid">
+          <!-- injected by projects.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Signal Divider 4 -->
+    <div class="signal-divider" aria-hidden="true">
+      <span class="signal-divider__node">◈</span>
+    </div>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="section">
+      <div class="section__inner">
+        <div class="section-header">
+          <span class="section-eyebrow">// section 4 of 5</span>
+          <h2 class="section-title" data-glitch="true">timeline.trace</h2>
+          <span class="section-subtitle">research · projects · milestones</span>
+        </div>
+        <canvas id="timeline-canvas" aria-hidden="true" style="position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+        <div class="timeline__line" id="timeline-line"></div>
+        <div id="timeline-events">
+          <!-- injected by timeline.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Signal Divider 5 -->
+    <div class="signal-divider" aria-hidden="true">
+      <span class="signal-divider__node">◈</span>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+      <div class="section__inner">
+        <div class="section-header">
+          <span class="section-eyebrow">// section 5 of 5</span>
+          <h2 class="section-title" data-glitch="true">transmit.packet</h2>
+          <span class="section-subtitle">send a signal — I'll hear it</span>
+        </div>
+        <div class="contact-form" id="contact-form">
+          <!-- injected by contact.js -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Terminal Navigation Dock -->
+  <nav id="terminal-dock" role="navigation" aria-label="Terminal navigation">
+    <!-- injected by main.js -->
+  </nav>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Modules -->
+  <script type="module" src="main.js"></script>
+
+</body>
+</html>
