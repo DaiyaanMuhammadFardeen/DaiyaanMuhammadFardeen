@@ -61,6 +61,13 @@ const updateMouse = (e) => {
   window.portfolio.mouse.y = e.clientY / window.innerHeight;
 };
 document.addEventListener('mousemove', updateMouse, { passive: true });
+document.addEventListener('touchmove', (e) => {
+  const t = e.touches[0];
+  if (t) {
+    window.portfolio.mouse.x = t.clientX / window.innerWidth;
+    window.portfolio.mouse.y = t.clientY / window.innerHeight;
+  }
+}, { passive: true });
 
 /* ── Scroll Tracking ── */
 let lastScrollY = 0;

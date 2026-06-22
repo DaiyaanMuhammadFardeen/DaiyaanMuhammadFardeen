@@ -2,7 +2,6 @@
  * Hero Section — initHero
  * Sequence: eyebrow fade → typewriter → subtitle tokens → CTA buttons → scroll indicator → particles
  */
-import { Typewriter } from '../utils/typewriter.js';
 import { initHeroParticles } from '../canvas/hero-particles.js';
 import { makeMagnetic } from '../utils/magnetic.js';
 
@@ -116,37 +115,15 @@ function runTypewriterSequence(spans) {
     span.style.display = 'block';
   });
 
-  // Build a chain: type each span's data-text with a pause on the period of the last one
-  const first = spans[0];
-  const tw = new Typewriter(first, { speed: 40 });
-
-  // We chain across spans by running them sequentially
-  return new Promise(async (resolve) => {
+  // Type each span sequentially using direct DOM typing
+  return (async () => {
     for (let i = 0; i < spans.length; i++) {
       const span = spans[i];
       const text = span.dataset.text || '';
       const isLast = i === spans.length - 1;
-
-      // Create a temp Typewriter for this span
-      const t = new Typewriter(span, { speed: 40 });
-      for (let c = 0; c < text.length; c++) {
-        const char = text[c];
-        t.type(char);
-        if (isLast && char === '.') {
-          t.pause(150);
-        }
-      }
-      await new Promise((resolveType) => {
-        // We need to implement type per-character manually for pause support
-        // Simpler approach: direct implementation
-        resolveType();
-      });
-
-      // Actually, let's do a simpler implementation inline
       await typeTextInSpan(span, text, isLast);
     }
-    resolve();
-  });
+  })();
 }
 
 function typeTextInSpan(span, text, isLast) {
