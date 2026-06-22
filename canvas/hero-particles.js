@@ -12,8 +12,8 @@
  * @param {HTMLCanvasElement} canvas - The hero particles canvas element.
  */
 
-const DESKTOP_STEP = 10; // ~3K particles for 719×1280 image
-const MOBILE_STEP = 16;  // ~1.6K particles
+const DESKTOP_STEP = 14; // ~3K particles for 719×1280 image
+const MOBILE_STEP = 19;  // ~1.6K particles
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
@@ -258,10 +258,11 @@ export function initHeroParticles(canvas) {
 
     frameCount++;
 
-    // Normalized 0-1 → canvas pixel coordinates
-    const mx = portfolio.mouse.x * w;
-    const my = portfolio.mouse.y * h;
-    const mouseActive = mx >= 0 && my >= 0;
+    // Viewport-relative → canvas-relative pixel coordinates
+    const rect = canvas.getBoundingClientRect();
+    const mx = (portfolio.mouse.x * window.innerWidth) - rect.left;
+    const my = (portfolio.mouse.y * window.innerHeight) - rect.top;
+    const mouseActive = mx >= 0 && my >= 0 && mx <= rect.width && my <= rect.height;
 
     // Throttle mouse repulsion: only recalc every 3 frames
     const recalcRepulsion = frameCount % 3 === 0;
