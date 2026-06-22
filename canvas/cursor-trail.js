@@ -17,9 +17,10 @@ const RING_INTERPOLATION = 0.15;
 const PARTICLE_LIFETIME = 40;
 const PARTICLE_MAX_SPEED_FACTOR = 0.3;
 const PARTICLE_GRAVITY = 0.05;
-const PARTICLE_MAX_COUNT = 80;
+const PARTICLE_MAX_COUNT = 40;
 const PARTICLE_SPAWN_DISTANCE = 2;
-const CONNECTION_INTERVAL = 5;
+const CONNECTION_INTERVAL = 8;
+const MOUSE_IDLE_TIMEOUT = 500; // ms before stopping particle spawn
 const CONNECTION_OPACITY = 0.4;
 
 function parseCSSVar(name, fallback) {
@@ -94,6 +95,7 @@ export function initCursorTrail() {
   let lastSpawnX = -1000;
   let lastSpawnY = -1000;
   let frameCount = 0;
+  let lastMoveTime = 0;
 
   // Hover state
   let hoverLabel = '';
@@ -105,7 +107,7 @@ export function initCursorTrail() {
   /* ---- Resize ---- */
 
   function resize() {
-    dpr = window.devicePixelRatio || 1;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
     w = window.innerWidth;
     h = window.innerHeight;
     canvas.width = w * dpr;
@@ -113,6 +115,10 @@ export function initCursorTrail() {
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Set device info on portfolio
+    if (!window.portfolio) window.portfolio = {};
+    window.portfolio.isMobile = w < 768;
   }
 
   /* ---- Mouse tracking ---- */
@@ -126,6 +132,11 @@ export function initCursorTrail() {
     mouseVelY = mouseY - prevMouseY;
     mouseSpeed = Math.sqrt(mouseVelX * mouseVelX + mouseVelY * mouseVelY);
 
+    // Check idle before updating timestamp
+    const now = performance.now();
+    const wasIdle = (now - lastMoveTime) > MOUSE_IDLE_TIMEOUT;
+    lastMoveTime = now;
+
     // Update portfolio global
     if (portfolio.mouse) {
       portfolio.mouse.x = mouseX;
@@ -136,6 +147,13 @@ export function initCursorTrail() {
     positionHistory.push({ x: mouseX, y: mouseY });
     if (positionHistory.length > TRAIL_LENGTH) {
       positionHistory.shift();
+    }
+
+    // If mouse was idle for 500ms+, skip particle spawn (avoid burst) but still update position
+    if (wasIdle) {
+      lastSpawnX = mouseX;
+      lastSpawnY = mouseY;
+      return;
     }
 
     // Spawn particles based on movement distance
@@ -365,6 +383,12 @@ export function initCursorTrail() {
 
   if (portfolio.reducedMotion) {
     applyReducedMotion();
+    return;
+  }
+
+  // Skip custom cursor on mobile — use default instead
+  if (window.innerWidth < 768) {
+    document.body.style.cursor = 'auto';
     return;
   }
 
