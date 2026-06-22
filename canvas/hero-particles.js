@@ -1,113 +1,112 @@
 /**
  * Hero Particles — canvas/hero-particles.js
- * Particle constellation that spells "DAIYAAN" using sampled text geometry.
- * Neural Terminal aesthetic: neon particles converge into readable text.
+ * Particle constellation that forms a portrait image from sampled pixels.
+ * Neural Terminal aesthetic: colored particles converge into a photographic image.
  *
- * Reads CSS custom properties (with hardcoded fallbacks):
- *   --accent-cyan  (#00e5ff)
- *   --accent-magenta (#ff00aa)
- *   --accent-green (#00ff41)
+ * Loads assets/profile.jpg (719×1280), samples pixels, and renders them
+ * as glowing particles that converge from scattered positions into the image.
+ * Gentle wave/flow animation after assembly. Mouse repulsion within 100px.
  *
  * Global context: window.portfolio = { mouse: {x, y}, reducedMotion }
  *
  * @param {HTMLCanvasElement} canvas - The hero particles canvas element.
  */
 
-const TEXT = 'DAIYAAN';
-const FONT_SIZE = 400;
-const SAMPLE_STEP = 4;
-const PARTICLE_COLORS = ['cyan', 'magenta', 'green'];
-
-function parseCSSVar(name, fallback) {
-  if (typeof document === 'undefined') return fallback;
-  const val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  return val || fallback;
-}
-
-const COLORS = {
-  cyan:    () => parseCSSVar('--accent-cyan', '#00e5ff'),
-  magenta: () => parseCSSVar('--accent-magenta', '#ff00aa'),
-  green:   () => parseCSSVar('--accent-green', '#00ff41'),
-};
-
-function hexToRgba(hex, alpha) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
+const DESKTOP_STEP = 10; // ~3K particles for 719×1280 image
+const MOBILE_STEP = 16;  // ~1.6K particles
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-/* ---- Text sampling ---- */
+/* ---- Image loading ---- */
 
-function sampleTextPositions(text, fontSize, step) {
-  // Offscreen canvas for text rendering
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
+}
+
+/* ---- Pixel sampling ---- */
+
+function sampleImagePixels(img, step) {
+  const imgW = img.naturalWidth || img.width;
+  const imgH = img.naturalHeight || img.height;
+
   const offscreen = document.createElement('canvas');
-  // Give generous space; scale font size up for crisp sampling
-  const scale = 2;
-  const fs = fontSize * scale;
-  offscreen.width = 800 * scale;
-  offscreen.height = 200 * scale;
+  offscreen.width = imgW;
+  offscreen.height = imgH;
   const octx = offscreen.getContext('2d');
   if (!octx) return [];
 
-  octx.fillStyle = '#000';
-  octx.fillRect(0, 0, offscreen.width, offscreen.height);
+  octx.drawImage(img, 0, 0);
 
-  octx.textBaseline = 'middle';
-  octx.textAlign = 'center';
-  octx.font = `bold ${fs}px "Space Grotesk", "DM Sans", sans-serif`;
-  octx.fillStyle = '#fff';
-  octx.fillText(text, offscreen.width / 2, offscreen.height / 2);
-
-  // Sample pixels
-  const imageData = octx.getImageData(0, 0, offscreen.width, offscreen.height);
+  const imageData = octx.getImageData(0, 0, imgW, imgH);
   const data = imageData.data;
-  const positions = [];
+  const pixels = [];
 
-  const scaledStep = step * scale;
-  for (let y = 0; y < offscreen.height; y += scaledStep) {
-    for (let x = 0; x < offscreen.width; x += scaledStep) {
-      const idx = (y * offscreen.width + x) * 4;
-      // If pixel is lit (white text)
-      if (data[idx] > 128) {
-        positions.push({
-          x: (x / scale) - (offscreen.width / scale / 2),
-          y: (y / scale) - (offscreen.height / scale / 2),
-        });
-      }
+  for (let y = 0; y < imgH; y += step) {
+    for (let x = 0; x < imgW; x += step) {
+      const idx = (y * imgW + x) * 4;
+      pixels.push({
+        x,
+        y,
+        r: data[idx],
+        g: data[idx + 1],
+        b: data[idx + 2],
+      });
     }
   }
 
-  return positions;
+  return pixels;
 }
 
 /* ---- Particle ---- */
 
-function createParticle(target, canvasW, canvasH) {
-  const colorKey = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
+function createParticle(sample, canvasW, canvasH, imgW, imgH) {
+  // Scale image to fit canvas with 85% padding, maintaining aspect ratio
+  const scaleX = (canvasW * 0.85) / imgW;
+  const scaleY = (canvasH * 0.85) / imgH;
+  const scale = Math.min(scaleX, scaleY);
+  const offsetX = (canvasW - imgW * scale) / 2;
+  const offsetY = (canvasH - imgH * scale) / 2;
+
   const spread = Math.max(canvasW, canvasH) * 0.6;
+  const tx = sample.x * scale + offsetX;
+  const ty = sample.y * scale + offsetY;
+
   return {
+    // Current position — scattered across canvas
     x: (Math.random() - 0.5) * spread + canvasW / 2,
     y: (Math.random() - 0.5) * spread + canvasH / 2,
-    targetX: target.x + canvasW / 2,
-    targetY: target.y + canvasH / 2,
+    // Target position — forms the image (modified by wave offset each frame)
+    targetX: tx,
+    targetY: ty,
+    // Original unmodified target (wave offset is applied to this)
+    origTargetX: tx,
+    origTargetY: ty,
+    // Velocity for spring physics
     vx: 0,
     vy: 0,
-    baseRadius: randomBetween(0.8, 2),
-    radius: randomBetween(0.8, 2),
-    pulsePhase: Math.random() * Math.PI * 2,
-    color: colorKey,
+    // Visual
+    baseRadius: randomBetween(1, 2.5),
+    radius: randomBetween(1, 2.5),
+    // Actual pixel color from image
+    r: sample.r,
+    g: sample.g,
+    b: sample.b,
+    // Glow alpha
     alpha: randomBetween(0.5, 1),
+    pulsePhase: Math.random() * Math.PI * 2,
     arrived: false,
     arriveTime: 0,
+    // Wave animation parameters
+    wavePhase: Math.random() * Math.PI * 2,
+    waveAmplitude: randomBetween(0.5, 2),
   };
 }
 
@@ -123,11 +122,17 @@ export function initHeroParticles(canvas) {
 
   let w, h;
   let particles = [];
-  let targetPositions = [];
+  let img = null;
+  let imgW = 0;
+  let imgH = 0;
   let lastTime = 0;
   let rafId = null;
-  let assemblyFraction = 0; // 0 → 1 over ~2 seconds
+  let assemblyFraction = 0;
   let initialised = false;
+  let frameCount = 0;
+  let loaded = false;
+
+  const waveSpeed = 0.002;
 
   /* ---- Resize ---- */
 
@@ -137,64 +142,84 @@ export function initHeroParticles(canvas) {
     const rect = parent.getBoundingClientRect();
     w = rect.width;
     h = rect.height;
-    canvas.width = w * (window.devicePixelRatio || 1);
-    canvas.height = h * (window.devicePixelRatio || 1);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
-    ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    if (!initialised) {
-      initParticles();
-      initialised = true;
+    // Set device info on portfolio
+    if (!window.portfolio) window.portfolio = {};
+    window.portfolio.isMobile = w < 768;
+
+    // Redraw static image on resize for reduced motion
+    if (loaded && portfolio.reducedMotion) {
+      drawStaticImage();
     }
   }
 
-  function initParticles() {
-    // Sample text at a size proportional to canvas width
-    const fontSize = Math.min(FONT_SIZE, w * 0.8);
-    targetPositions = sampleTextPositions(TEXT, fontSize, SAMPLE_STEP);
+  /* ---- Particle initialisation ---- */
 
-    // Scale targets to canvas size if needed
-    if (targetPositions.length === 0) {
-      // Fallback: generate a grid if sampling fails
+  function initParticles() {
+    const step = w < 768 ? MOBILE_STEP : DESKTOP_STEP;
+    const samples = sampleImagePixels(img, step);
+
+    // Fallback if sampling yields nothing
+    if (samples.length === 0) {
       for (let i = 0; i < 200; i++) {
-        targetPositions.push({
-          x: (Math.random() - 0.5) * w * 0.6,
-          y: (Math.random() - 0.5) * h * 0.4,
+        samples.push({
+          x: Math.random() * imgW,
+          y: Math.random() * imgH,
+          r: 255,
+          g: 255,
+          b: 255,
         });
       }
     }
 
-    particles = targetPositions.map((t) => createParticle(t, w, h));
+    particles = samples.map((s) => createParticle(s, w, h, imgW, imgH));
     assemblyFraction = 0;
   }
 
-  /* ---- Draw static text (reduced motion) ---- */
+  /* ---- Draw static image (reduced motion) ---- */
 
-  function drawStaticText() {
+  function drawStaticImage() {
+    if (!img || !w || !h) return;
     ctx.clearRect(0, 0, w, h);
-    const fontSize = Math.min(FONT_SIZE, w * 0.8);
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
-    ctx.font = `bold ${fontSize}px "Space Grotesk", "DM Sans", sans-serif`;
 
-    // Glow
-    const cyanHex = COLORS.cyan();
-    ctx.shadowColor = cyanHex;
-    ctx.shadowBlur = 30;
-    ctx.fillStyle = hexToRgba(cyanHex, 0.15);
-    ctx.fillText(TEXT, w / 2, h / 2);
+    const scaleX = (w * 0.85) / imgW;
+    const scaleY = (h * 0.85) / imgH;
+    const scale = Math.min(scaleX, scaleY);
+    const dw = imgW * scale;
+    const dh = imgH * scale;
+    const dx = (w - dw) / 2;
+    const dy = (h - dh) / 2;
 
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = hexToRgba(cyanHex, 0.6);
-    ctx.fillText(TEXT, w / 2, h / 2);
+    ctx.drawImage(img, dx, dy, dw, dh);
   }
 
   /* ---- Animation loop ---- */
 
   function loop(timestamp) {
     if (portfolio.reducedMotion) {
-      drawStaticText();
+      drawStaticImage();
+      return;
+    }
+
+    // Pause rendering when hero section is not in viewport
+    const heroEl = document.getElementById('hero');
+    if (heroEl) {
+      const rect = heroEl.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+        rafId = requestAnimationFrame(loop);
+        return;
+      }
+    }
+
+    // If image not yet loaded, skip frame
+    if (!loaded || particles.length === 0) {
+      rafId = requestAnimationFrame(loop);
       return;
     }
 
@@ -206,26 +231,38 @@ export function initHeroParticles(canvas) {
       assemblyFraction = Math.min(1, assemblyFraction + dt / 120);
     }
 
+    frameCount++;
+
     const mx = portfolio.mouse.x;
     const my = portfolio.mouse.y;
     const mouseActive = mx >= 0 && my >= 0;
+
+    // Throttle mouse repulsion: only recalc every 3 frames
+    const recalcRepulsion = frameCount % 3 === 0;
 
     // Spring force: (target-pos)*0.05 - vel*0.85
     const springK = 0.05;
     const dampK = 0.85;
     const repelRange = 100;
     const repelForce = 0.8;
+    const time = timestamp || 0;
 
     // Update particles
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
 
-      // Target position with assembly interpolation
+      // Wave/flow offset — sinusoidal displacement from original target
+      const waveOffsetX = Math.sin(time * waveSpeed + p.wavePhase) * p.waveAmplitude;
+      const waveOffsetY = Math.cos(time * waveSpeed + p.wavePhase) * p.waveAmplitude;
+      p.targetX = p.origTargetX + waveOffsetX;
+      p.targetY = p.origTargetY + waveOffsetY;
+
+      // Target position with assembly interpolation (ease-out quad)
       const easeT = assemblyFraction < 0.5
         ? 2 * assemblyFraction * assemblyFraction
         : 1 - Math.pow(-2 * assemblyFraction + 2, 2) / 2;
 
-      // Drift toward target (spring physics)
+      // Spring physics: drift toward target
       const dx = p.targetX - p.x;
       const dy = p.targetY - p.y;
       const ax = dx * springK - p.vx * dampK;
@@ -234,8 +271,8 @@ export function initHeroParticles(canvas) {
       p.vx += ax * dt;
       p.vy += ay * dt;
 
-      // Mouse repulsion
-      if (mouseActive) {
+      // Mouse repulsion (throttled to every 3 frames)
+      if (mouseActive && recalcRepulsion) {
         const mdx = p.x - mx;
         const mdy = p.y - my;
         const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
@@ -275,26 +312,30 @@ export function initHeroParticles(canvas) {
     // --- Render ---
     ctx.clearRect(0, 0, w, h);
 
-    // Draw faint connections between nearby arrived particles
+    // Draw faint connections between nearest arrived particles (max 50)
+    const arrivedParticles = [];
     for (let i = 0; i < particles.length; i++) {
-      const a = particles[i];
-      if (!a.arrived) continue;
-
-      for (let j = i + 1; j < particles.length; j++) {
-        const b = particles[j];
-        if (!b.arrived) continue;
-
+      if (particles[i].arrived) arrivedParticles.push(particles[i]);
+    }
+    const connectionCount = Math.min(arrivedParticles.length, 50);
+    for (let i = 0; i < connectionCount; i++) {
+      const a = arrivedParticles[i];
+      for (let j = i + 1; j < connectionCount; j++) {
+        const b = arrivedParticles[j];
         const dx = a.x - b.x;
         const dy = a.y - b.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         const maxDist = 60;
         if (dist < maxDist) {
           const opacity = (1 - dist / maxDist) * 0.12;
-          const colorHex = COLORS[a.color]();
+          // Blend colors between the two connected particles
+          const avgR = Math.round((a.r + b.r) / 2);
+          const avgG = Math.round((a.g + b.g) / 2);
+          const avgB = Math.round((a.b + b.b) / 2);
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = hexToRgba(colorHex, opacity);
+          ctx.strokeStyle = `rgba(${avgR},${avgG},${avgB},${opacity})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -302,45 +343,57 @@ export function initHeroParticles(canvas) {
     }
 
     // Draw particles
-    const time = timestamp || 0;
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
-      const colorHex = COLORS[p.color]();
       const r = p.radius;
-
-      // Glow circle
       const alpha = p.arrived ? p.alpha : p.alpha * Math.min(1, assemblyFraction * 2);
+
+      // Glow ring
       ctx.beginPath();
       ctx.arc(p.x, p.y, r + 2, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(colorHex, alpha * 0.1);
+      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha * 0.1})`;
       ctx.fill();
 
       // Core dot
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(colorHex, alpha * 0.8);
+      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha * 0.8})`;
       ctx.fill();
 
       // Bright center
       ctx.beginPath();
       ctx.arc(p.x, p.y, r * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(colorHex, alpha * 0.4);
+      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha * 0.4})`;
       ctx.fill();
     }
 
     rafId = requestAnimationFrame(loop);
   }
 
-  /* ---- Init ---- */
+  /* ---- Start ---- */
 
   resize();
   window.addEventListener('resize', resize);
 
-  if (portfolio.reducedMotion) {
-    drawStaticText();
-  } else {
-    rafId = requestAnimationFrame(loop);
-  }
+  // Load image asynchronously — start immediately, only animate once loaded
+  loadImage('assets/profile.jpg')
+    .then((loadedImg) => {
+      img = loadedImg;
+      imgW = img.naturalWidth || img.width;
+      imgH = img.naturalHeight || img.height;
+      loaded = true;
+
+      if (portfolio.reducedMotion) {
+        drawStaticImage();
+      } else {
+        initParticles();
+        initialised = true;
+        rafId = requestAnimationFrame(loop);
+      }
+    })
+    .catch((err) => {
+      console.error('Hero particles: failed to load image', err);
+    });
 
   /* ---- Cleanup ---- */
 
@@ -348,7 +401,8 @@ export function initHeroParticles(canvas) {
     if (rafId) cancelAnimationFrame(rafId);
     window.removeEventListener('resize', resize);
     particles = [];
-    targetPositions = [];
+    img = null;
+    loaded = false;
     initialised = false;
   };
 }
