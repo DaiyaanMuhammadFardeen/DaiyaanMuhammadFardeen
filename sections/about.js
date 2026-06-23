@@ -50,7 +50,7 @@ const TERMINAL_LINES = [
   { text: '  "gpa": "3.73/4.0",', cls: 'terminal-muted', strCls: 'terminal-cyan' },
   { text: '  "location": "Dhaka, Bangladesh",', cls: 'terminal-muted', strCls: 'terminal-cyan' },
   { text: '  "experience": "ex-Student Associate at DIU (2023\u20132024)",', cls: 'terminal-muted', strCls: 'terminal-cyan' },
-  { text: '  "status": "Thesis \u2014 Compact Transformers for commit generation",', cls: 'terminal-muted', strCls: 'terminal-cyan' },
+  { text: '  "status": "Thesis \u2014 Mini Transformer from scratch for commit generation",', cls: 'terminal-muted', strCls: 'terminal-cyan' },
   { text: '  "achievements": "2nd place AI Prompt Battle 2024",', cls: 'terminal-muted', strCls: 'terminal-cyan' },
   { text: '  "focus": [', cls: 'terminal-muted' },
   { text: '    "Large language models",', cls: 'terminal-muted', strCls: 'terminal-cyan' },
@@ -68,8 +68,9 @@ const TERMINAL_LINES = [
   { text: 'Student at Daffodil International University (CSE) \u2014 GPA 3.73/4.0.', cls: 'terminal-primary' },
   { text: 'Ex-Student Associate at DIU (2023\u20132024).', cls: 'terminal-primary' },
   { text: '', cls: '' },
-  { text: 'My thesis explores compact Transformers for commit message generation:', cls: 'terminal-primary' },
-  { text: 'teaching a model to read git diffs and describe what changed, in prose.', cls: 'terminal-primary' },
+  { text: 'My thesis: a Mini Transformer built from scratch for commit message generation.', cls: 'terminal-primary' },
+  { text: 'Tokenizes git diffs, learns structural code changes through self-attention,', cls: 'terminal-primary' },
+  { text: 'and generates descriptive commit messages \u2014 no HuggingFace, no pretrained weights.', cls: 'terminal-primary' },
   { text: '', cls: '' },
   { text: 'Competitive programmer \u2014 2nd place at AI Prompt Battle 2024.', cls: 'terminal-primary' },
   { text: '', cls: '' },
@@ -78,14 +79,17 @@ const TERMINAL_LINES = [
   { text: 'and code that knows why it runs fast.', cls: 'terminal-primary' },
   { text: '', cls: '' },
   { text: 'Currently: building an AI-powered CV tailoring tool, engineering a', cls: 'terminal-primary' },
-  { text: 'GPU cluster intelligence system, and writing my thesis (Diff2Commit).', cls: 'terminal-primary' },
+  { text: 'GPU cluster intelligence system, and completing my Mini Transformer thesis.', cls: 'terminal-primary' },
+  { text: '', cls: '' },
+  { text: '────────────────────────────────────────', cls: 'terminal-muted' },
+  { text: '  type \'help\' and press Enter  ▸  interactive terminal', cls: 'terminal-amber' },
   { text: '', cls: '' },
   { text: '$ █', cls: 'terminal-green', isCursor: true },
 ];
 
 const ABOUT_COMMANDS = {
   'cat stack.txt': `── Technology Stack ──\n\nLanguages:\n  Rust · C++ · Python · Go · TypeScript · Java · JavaScript · Dart · Kotlin · PHP · SQL · HTML · CSS · Bash\n\nAI/ML:\n  PyTorch · Transformers · vLLM · ROCm · Hugging Face · Ollama\n\nSystems:\n  OpenGL · ECS Architecture · GPU Compute · Linux\n\nBackend:\n  FastAPI · PostgreSQL · Redis · Docker · Spring Boot · Next.js · React · Node.js\n\nDatabases:\n  PostgreSQL · MongoDB · MySQL · Redis\n\nMobile:\n  Flutter\n\nTools:\n  Neovim · Git · ROCm · Arch Linux · Ollama · Google AppScript`,
-  'cat thesis.txt': `── Thesis: Compact Transformers for Commit Message Generation ──\n\nThis research explores training a compact Transformer model to\nunderstand git diffs and generate human-readable commit messages.\n\nThe model learns to identify structural code changes, summarize\nthem, and produce concise, descriptive prose explaining what changed.\n\nKey areas:\n  • Tokenizing code diffs for Transformer consumption\n  • Attention-based change summarization\n  • Efficient inference on consumer GPUs (AMD ROCm)\n  • Evaluation against human-written commit messages\n\nStatus: In progress — thesis writing and model tuning.`,
+  'cat thesis.txt': `── Thesis: Mini Transformer from Scratch for Commit Generation ──\n\nI built a Transformer from scratch in PyTorch — no pretrained weights,\nno HuggingFace models — a compact encoder-decoder that reads git diffs\nand generates human-readable commit messages.\n\nKey design decisions:\n  • Custom BPE tokenizer trained on code diffs\n  • 4-layer encoder, 4-layer decoder, learned positional encodings\n  • Trained on 50k+ commits from open-source repositories\n  • Inference runs on consumer GPU (AMD RX 6600 via ROCm)\n\nThe central question: can a sub-50M parameter Transformer achieve\nmeaningful commit generation without the baggage of large LLMs?\n\nStatus: In progress — model training and thesis writing.`,
   'cat projects.txt': `── Projects ──\n\nCVTailor       ─ AI-powered CV tailoring engine (FastAPI, Ollama, pgvector)\nVibeCost       ─ AI agent token & cost simulator (Python, CLI)\nDiff2Commit    ─ Transformer for commit message generation (PyTorch, Thesis)\nNyon Engine    ─ Custom ECS 2D game engine (C++17, OpenGL 4.6)\nKhojAI         ─ AI search with RAG (Spring Boot, FastAPI, Flutter)\nFundMyIdea BD  ─ Crowdfunding for student entrepreneurs (Node.js, MongoDB)\nRaycaster      ─ Wolfenstein-style GPU raycaster (C++, OpenGL 3.3)\nAGHH           ─ Git management TUI (Bash, Python, Dialog)`,
   'uname -a': 'neural-terminal 6.2.0-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux | DaiyaanOS v2.4.1',
   date: () => new Date().toString(),
@@ -229,7 +233,6 @@ function startTerminalAutoType(terminalBody) {
   terminalBody.style.whiteSpace = 'pre-wrap';
   terminalBody.style.wordBreak = 'break-word';
   terminalBody.style.overflowY = 'auto';
-  terminalBody.style.maxHeight = '400px';
 
   let lineIdx = 0;
 
@@ -305,7 +308,6 @@ function renderTerminalInstant(terminalBody) {
   terminalBody.style.whiteSpace = 'pre-wrap';
   terminalBody.style.wordBreak = 'break-word';
   terminalBody.style.overflowY = 'auto';
-  terminalBody.style.maxHeight = '400px';
 
   for (const lineData of TERMINAL_LINES) {
     const lineEl = document.createElement('div');
