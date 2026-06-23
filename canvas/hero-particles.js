@@ -45,7 +45,7 @@ const REPEL_FORCE      = 80;    // mouse repulsion impulse magnitude (px/s²)
 const VELOCITY_EPSILON = 0.01;
 
 // Mouse
-const REPEL_RANGE          = 60;  // px
+const REPEL_RANGE          = 40;  // px
 const REPULSION_EVERY_N    = 2;    // apply mouse repulsion every N frames
 
 // Visual
