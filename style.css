@@ -36,6 +36,11 @@
   --border-accent: 1px solid #00e5ff33;
   --border-glow: 1px solid #00e5ff;
 
+  /* Terminal dock */
+  --dock-bg: rgba(13, 13, 31, 0.85);
+  --dock-border: 1px solid #00e5ff22;
+  --output-bg: rgba(13, 13, 31, 0.9);
+
   /* Radii */
   --radius-card: 4px;
   --radius-btn: 2px;
@@ -79,6 +84,11 @@
   --border-subtle: 1px solid #00000010;
   --border-accent: 1px solid #0099cc33;
   --border-glow: 1px solid #0099cc;
+
+  /* Terminal dock */
+  --dock-bg: rgba(240, 240, 248, 0.92);
+  --dock-border: 1px solid #0099cc33;
+  --output-bg: rgba(240, 240, 248, 0.95);
 }
 
 /* --- Base --- */
@@ -591,10 +601,11 @@ a:hover {
 }
 
 .terminal-dock__bar {
-  background: rgba(13, 13, 31, 0.85);
+  background: var(--dock-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid #00e5ff22;
+  border: 1px solid transparent;
+  border-color: color-mix(in srgb, var(--accent-cyan) 15%, transparent);
   border-bottom: none;
   border-radius: 8px 8px 0 0;
   padding: 10px 16px;
@@ -605,8 +616,12 @@ a:hover {
 }
 
 @keyframes dock-glow {
-  0%, 100% { border-color: #00e5ff22; }
-  50% { border-color: #00e5ff44; }
+  0%, 100% { border-top-color: color-mix(in srgb, var(--accent-cyan) 15%, transparent);
+             border-left-color: color-mix(in srgb, var(--accent-cyan) 15%, transparent);
+             border-right-color: color-mix(in srgb, var(--accent-cyan) 15%, transparent); }
+  50% { border-top-color: color-mix(in srgb, var(--accent-cyan) 30%, transparent);
+        border-left-color: color-mix(in srgb, var(--accent-cyan) 30%, transparent);
+        border-right-color: color-mix(in srgb, var(--accent-cyan) 30%, transparent); }
 }
 
 .terminal-dock__prompt {
@@ -680,10 +695,11 @@ a:hover {
 
 /* Terminal Output Panel */
 .terminal-output {
-  background: rgba(13, 13, 31, 0.9);
+  background: var(--output-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid #00e5ff22;
+  border: 1px solid transparent;
+  border-color: color-mix(in srgb, var(--accent-cyan) 15%, transparent);
   border-bottom: none;
   border-radius: 8px 8px 0 0;
   max-height: 200px;
@@ -702,6 +718,16 @@ a:hover {
 
 .terminal-output::-webkit-scrollbar {
   width: 2px;
+}
+
+.terminal-output__cmd {
+  margin-bottom: 4px;
+}
+
+.terminal-output__resp {
+  margin-bottom: 8px;
+  color: var(--accent-cyan);
+  white-space: pre-wrap;
 }
 
 /* --- About Terminal --- */
