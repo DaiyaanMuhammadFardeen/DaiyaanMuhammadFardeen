@@ -1,11 +1,11 @@
 /**
  * Hero Section — initHero
  * Sequence: eyebrow fade → typewriter → subtitle tokens → CTA buttons → scroll indicator → particles
+ * Right column: image-based particle portrait
  */
 import { initHeroParticles } from '../canvas/hero-particles.js';
 import { makeMagnetic } from '../utils/magnetic.js';
 
-const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 export function initHero() {
@@ -16,12 +16,10 @@ export function initHero() {
 
   // Grab elements
   const eyebrow = document.getElementById('hero-eyebrow');
-  const display = document.getElementById('hero-display');
   const subtitle = document.getElementById('hero-subtitle');
   const cta = document.getElementById('hero-cta');
   const scrollIndicator = document.getElementById('scroll-indicator');
   const particlesCanvas = document.getElementById('hero-particles');
-  const typewriterSpans = $$('.typewriter-text', display);
 
   // CTA buttons
   const btns = $$('.btn-ghost', cta);
@@ -29,15 +27,9 @@ export function initHero() {
   const readThesisBtn = btns.find((b) => b.dataset.href);
 
   if (isReduced) {
-    // Show everything instantly
     if (eyebrow) {
       eyebrow.style.opacity = '1';
       eyebrow.style.transform = 'translateY(0)';
-    }
-    if (typewriterSpans.length) {
-      typewriterSpans.forEach((span) => {
-        span.textContent = span.dataset.text || '';
-      });
     }
     if (subtitle) {
       subtitle.style.opacity = '1';
@@ -50,11 +42,8 @@ export function initHero() {
     if (scrollIndicator) {
       scrollIndicator.classList.add('hero__scroll-indicator--visible');
     }
-    // Init particles anyway (visual)
     initHeroParticles(particlesCanvas);
-    // Magnetic
     btns.forEach((btn) => makeMagnetic(btn));
-    // Parallax + click handlers
     attachParallax(hero);
     attachClickHandlers(viewWorkBtn, readThesisBtn);
     return;
@@ -71,79 +60,37 @@ export function initHero() {
     });
   }
 
-  // 2. Typewriter sequence (after 200ms delay)
+  // 2. Show subtitle (after 200ms delay)
   setTimeout(() => {
-    runTypewriterSequence(typewriterSpans).then(() => {
-      // 3. After typewriter finishes, wait 500ms then subtitle
+    animateSubtitle(subtitle).then(() => {
+      // 3. CTA buttons
       setTimeout(() => {
-        animateSubtitle(subtitle).then(() => {
-          // 4. Fade in CTA buttons
-          setTimeout(() => {
-            animateCTA(cta).then(() => {
-              // 5. Show scroll indicator
-              if (scrollIndicator) {
-                scrollIndicator.classList.add('hero__scroll-indicator--visible');
-              }
-            });
-          }, 200);
+        animateCTA(cta).then(() => {
+          // 4. Scroll indicator
+          if (scrollIndicator) {
+            scrollIndicator.classList.add('hero__scroll-indicator--visible');
+          }
         });
-      }, 500);
+      }, 200);
     });
   }, 200);
 
-  // 6. Init particles
+  // 5. Init particles
   initHeroParticles(particlesCanvas);
 
-  // 7. Magnetic buttons
+  // 6. Magnetic buttons
   btns.forEach((btn) => makeMagnetic(btn));
 
-  // 8. Parallax on scroll
+  // 7. Parallax on scroll
   attachParallax(hero);
 
-  // 9. Click handlers
+  // 8. Click handlers
   attachClickHandlers(viewWorkBtn, readThesisBtn);
 }
 
 /* ---- Sub-routines ---- */
 
-function runTypewriterSequence(spans) {
-  if (!spans.length) return Promise.resolve();
 
-  // Clear any existing content and show spans
-  spans.forEach((span) => {
-    span.textContent = '';
-    span.style.display = 'block';
-  });
-
-  // Type each span sequentially using direct DOM typing
-  return (async () => {
-    for (let i = 0; i < spans.length; i++) {
-      const span = spans[i];
-      const text = span.dataset.text || '';
-      const isLast = i === spans.length - 1;
-      await typeTextInSpan(span, text, isLast);
-    }
-  })();
-}
-
-function typeTextInSpan(span, text, isLast) {
-  return new Promise((resolve) => {
-    span.textContent = '';
-    let idx = 0;
-    function tick() {
-      if (idx >= text.length) {
-        resolve();
-        return;
-      }
-      span.textContent += text[idx];
-      const isPeriod = text[idx] === '.';
-      idx++;
-      const delay = isLast && isPeriod ? 150 : 40;
-      setTimeout(tick, delay);
-    }
-    tick();
-  });
-}
 
 function animateSubtitle(subtitleEl) {
   if (!subtitleEl) return Promise.resolve();
