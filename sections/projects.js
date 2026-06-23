@@ -7,7 +7,7 @@ import { makeTiltable } from '../utils/tilt.js';
 /* ── Featured projects (manually curated, merged with GitHub API) ── */
 const featured = [
   {
-    repoName: 'cvtailor',
+    repoName: 'CV-Tailor',
     displayName: 'CVTailor',
     tagline: 'Local-first AI that rewrites your CV to fit any job',
     description:
@@ -27,7 +27,7 @@ const featured = [
     icon: '◉',
   },
   {
-    repoName: 'commit-msg-transformer',
+    repoName: 'Mini-Transfomer-From-Scratch',
     displayName: 'Diff2Commit',
     tagline: 'Compact Transformer that reads diffs and writes commit messages',
     description:
@@ -37,7 +37,7 @@ const featured = [
     icon: '◉',
   },
   {
-    repoName: 'nyon-engine',
+    repoName: 'Nyon',
     displayName: 'Nyon Engine',
     tagline: 'Box2D-like physics with Unity-style ECS in C++/OpenGL',
     description:
@@ -47,7 +47,7 @@ const featured = [
     icon: '⬡',
   },
   {
-    repoName: 'khojai',
+    repoName: 'KhojAI',
     displayName: 'KhojAI',
     tagline: 'AI-powered search with RAG, real-time web, and multi-platform',
     description:
@@ -57,17 +57,7 @@ const featured = [
     icon: '◇',
   },
   {
-    repoName: 'fundmyidea-bd',
-    displayName: 'FundMyIdea BD',
-    tagline: 'AI-enhanced crowdfunding for student entrepreneurs',
-    description:
-      'Full-stack crowdfunding platform with Node.js/Express/MongoDB. Drag-and-drop campaign page builder, custom reward tiers, WebSocket real-time donation tracking, AI-powered campaign recommendations, analytics dashboard (funding trends, visitor metrics, conversion stats). bKash integration, JWT auth, CSRF protection, dark mode, gamification, responsive design.',
-    tech: ['Node.js', 'Express', 'MongoDB', 'WebSocket', 'EJS', 'JavaScript'],
-    accent: '--accent-magenta',
-    icon: '◎',
-  },
-  {
-    repoName: 'raycaster-opengl',
+    repoName: 'Raycaster-OpenGL',
     displayName: 'Raycaster OpenGL',
     tagline: 'GPU-accelerated Wolfenstein-style raycasting engine',
     description:
@@ -77,7 +67,7 @@ const featured = [
     icon: '⬢',
   },
   {
-    repoName: 'auto-git-handler-hub',
+    repoName: 'Auto-Git-Handler-Hub',
     displayName: 'AGHH',
     tagline: 'TUI-based Git management and automation hub',
     description:
