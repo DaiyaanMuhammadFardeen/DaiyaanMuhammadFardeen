@@ -1,148 +1,330 @@
 /**
  * Hero Particles — canvas/hero-particles.js
- * Particle constellation that forms a portrait image from sampled pixels.
- * Neural Terminal aesthetic: colored particles converge into a photographic image.
+ * Combined text + image particle system.
  *
- * Loads assets/profile.jpg (719×1280), samples pixels, and renders them
- * as glowing particles that converge from scattered positions into the image.
- * Gentle wave/flow animation after assembly. Mouse repulsion within 100px.
+ * One full-viewport canvas with two zones:
+ *   Desktop: text particles (LEFT half), image particles (RIGHT half)
+ *   Mobile:  text particles (TOP half),  image particles (BOTTOM half)
  *
- * Global context: window.portfolio = { mouse: {x, y}, reducedMotion }
+ * Lifecycle: assembly (spring convergence) → settle (gradual slowdown)
+ *            → mouse interaction (repulsion only, no spring recovery).
  *
- * @param {HTMLCanvasElement} canvas - The hero particles canvas element.
+ * Text lines: BUILDING (cyan), THINKING (magenta), VIBING (green)
+ * Image:      assets/profile.jpg pixel-sampled particles
+ *
+ * Global: window.portfolio = { mouse: {x, y}, reducedMotion }
+ *
+ * @param {HTMLCanvasElement} canvas
  */
 
-const DESKTOP_STEP = 14;
-const MOBILE_STEP = 19;
-const MOBILE_BREAKPOINT = 768;
+// ---- Text lines ----
+const TEXT_LINES = [
+  { text: 'BUILDING', color: 'cyan',    fontSize: 160 },
+  { text: 'THINKING', color: 'magenta', fontSize: 160 },
+  { text: 'VIBING',   color: 'green',   fontSize: 160 },
+];
 
-/* Assembly phase */
-const SPREAD_FACTOR = 1.8;     // particles start way outside viewport
-const ASSEMBLY_FRAMES = 120;   // ~2 seconds convergence
-const SPRING_K_FAST = 0.05;    // assembly: fast convergence
-const DAMP_K_FAST = 0.85;
+// ---- Sampling ----
+const DESKTOP_TEXT_STEP  = 12;
+const MOBILE_TEXT_STEP   = 12;
+const DESKTOP_IMAGE_STEP = 15;
+const MOBILE_IMAGE_STEP  = 20;
+const MOBILE_BREAKPOINT  = 768;
+const IMAGE_SCALE        = 0.85;
+const IMAGE_PATH         = 'assets/profile.jpg';
 
-/* Stable phase (after assembly) */
-const SPRING_K_STABLE = 0.01;  // stable: slow gentle return
-const DAMP_K_STABLE = 0.97;    // overdamped — no oscillation
-const REPEL_FORCE_STABLE = 0.3;
-const WAVE_AMP_MAX = 0.3;      // subtle breathing only
+// Assembly
+const SPREAD_FACTOR    = 1.8;
+const ASSEMBLY_FRAMES  = 120;   // frames at 60 fps → ~2 s
+const SPRING_K         = 0.05;  // spring stiffness (position-error multiplier)
+const SPRING_DAMP      = 0.85;  // velocity damping per 16 ms frame (NOT scaled by dt)
 
-/* Mouse */
-const REPEL_RANGE = 100;
-const REPULSION_THROTTLE = 3;
+// Settle phase
+const SETTLE_DAMP      = 0.93;  // velocity bleed per 16 ms frame
+const REPEL_FORCE      = 80;    // mouse repulsion impulse magnitude (px/s²)
+const VELOCITY_EPSILON = 0.01;
 
-/* Visual */
-const CONNECTION_MAX_DIST = 60;
-const CONNECTION_OPACITY = 0.12;
+// Mouse
+const REPEL_RANGE          = 60;  // px
+const REPULSION_EVERY_N    = 2;    // apply mouse repulsion every N frames
+
+// Visual
+const CONNECTION_MAX_DIST  = 50;
+const CONNECTION_OPACITY   = 0.12;
 const CONNECTION_LINE_WIDTH = 0.5;
 const CONNECTION_MAX_COUNT = 50;
-const ARRIVAL_THRESHOLD = 2;
-const PULSE_SPEED = 0.003;
-const PULSE_AMPLITUDE = 0.4;
-const WAVE_SPEED = 0.002;
-const IMAGE_SCALE = 0.85;
-const DISPLACED_THRESHOLD = 3; // min px from target to draw connections
+const ARRIVAL_THRESHOLD    = 2;
+const PULSE_SPEED          = 0.003;
+const PULSE_AMPLITUDE      = 0.4;
+const DISPLACED_THRESHOLD  = 3;
+
+// Particle rendering
+const BASE_RADIUS_MIN    = 1;
+const BASE_RADIUS_MAX    = 2.5;
+const GLOW_RING_OFFSET   = 2;
+const GLOW_ALPHA         = 0.1;
+const CORE_ALPHA         = 0.8;
+const CENTER_ALPHA       = 0.4;
+const CENTER_RADIUS_RATIO = 0.4;
+const STAGGER_DELAY_MAX  = 1000;
+
+// ---- Color helpers ----
+const COLORS = {
+  cyan:    () => getComputedStyle(document.documentElement).getPropertyValue('--accent-cyan').trim()    || '#00e5ff',
+  magenta: () => getComputedStyle(document.documentElement).getPropertyValue('--accent-magenta').trim() || '#ff00aa',
+  green:   () => getComputedStyle(document.documentElement).getPropertyValue('--accent-green').trim()   || '#00ff41',
+};
+
+function hexToRgba(hex, alpha) {
+  if (!hex) return `rgba(0,229,255,${alpha})`;
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-/* ---- Image loading ---- */
-
+// ---- Image loading ----
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.onload  = () => resolve(img);
+    img.onerror = () => reject(new Error('Failed to load: ' + src));
     img.src = src;
   });
 }
 
-/* ---- Pixel sampling ---- */
+// ---- Text pixel sampling ----
+// FIX: measure actual rendered line heights per-browser using measureText metrics,
+//      then centre the whole text block vertically.
+function sampleTextLines(textRegionW, textRegionH, isMobile) {
+  const step  = isMobile ? MOBILE_TEXT_STEP : DESKTOP_TEXT_STEP;
+  const scale = 2;   // supersample for sharper edges
+  const cW    = Math.round(textRegionW * scale);
+  const cH    = Math.round(textRegionH * scale);
 
-function sampleImagePixels(img, step) {
-  const imgW = img.naturalWidth || img.width;
-  const imgH = img.naturalHeight || img.height;
-
-  const offscreen = document.createElement('canvas');
-  offscreen.width = imgW;
-  offscreen.height = imgH;
-  const octx = offscreen.getContext('2d');
+  const offCanvas = document.createElement('canvas');
+  offCanvas.width  = cW;
+  offCanvas.height = cH;
+  const octx = offCanvas.getContext('2d');
   if (!octx) return [];
 
-  octx.drawImage(img, 0, 0);
+  octx.fillStyle = '#000';
+  octx.fillRect(0, 0, cW, cH);
 
-  const imageData = octx.getImageData(0, 0, imgW, imgH);
-  const data = imageData.data;
-  const pixels = [];
+  // --- Pass 1: measure each line's actual font size after clamping to maxW ---
+  const maxW   = cW * 0.9;
+  const lineMeta = TEXT_LINES.map((line) => {
+    let size = line.fontSize * scale;
+    octx.font = `bold ${size}px "Space Grotesk", "DM Sans", sans-serif`;
+    const mw = octx.measureText(line.text).width;
+    if (mw > maxW) size = size * (maxW / mw);
+    octx.font = `bold ${size}px "Space Grotesk", "DM Sans", sans-serif`;
+    const m   = octx.measureText(line.text);
+    // Use ascent + descent for the true rendered height
+    const lineH = (m.actualBoundingBoxAscent  ?? size * 0.8) +
+                  (m.actualBoundingBoxDescent ?? size * 0.2);
+    return { size, lineH };
+  });
 
-  for (let y = 0; y < imgH; y += step) {
-    for (let x = 0; x < imgW; x += step) {
-      const idx = (y * imgW + x) * 4;
-      pixels.push({
-        x,
-        y,
-        r: data[idx],
-        g: data[idx + 1],
-        b: data[idx + 2],
-      });
+  // --- Total block height + equal gaps ---
+  const totalH    = lineMeta.reduce((s, l) => s + l.lineH, 0);
+  const GAP_RATIO = 0.25;                               // gap as fraction of line height
+  const gaps      = lineMeta.reduce((s, l) => s + l.lineH * GAP_RATIO, 0);
+  const blockH    = totalH + gaps;
+  // Centre the block vertically
+  let currentY    = (cH - blockH) / 2;
+
+  // --- Pass 2: draw ---
+  octx.textBaseline = 'top';
+  octx.textAlign    = 'center';
+
+  TEXT_LINES.forEach((line, li) => {
+    const { size, lineH } = lineMeta[li];
+    octx.font      = `bold ${size}px "Space Grotesk", "DM Sans", sans-serif`;
+    octx.fillStyle = '#fff';
+    octx.fillText(line.text, cW / 2, currentY);
+    currentY += lineH + lineH * GAP_RATIO;
+  });
+
+  // --- Pass 3: sample bright pixels ---
+  const imageData = octx.getImageData(0, 0, cW, cH);
+  const data      = imageData.data;
+  const samples   = [];
+
+  // Rebuild line Y-ranges at same scale for colour attribution
+  const lineRanges = [];
+  {
+    let cy = (cH - blockH) / 2;
+    lineMeta.forEach((lm, li) => {
+      lineRanges.push({ y0: cy, y1: cy + lm.lineH, colorName: TEXT_LINES[li].color });
+      cy += lm.lineH + lm.lineH * GAP_RATIO;
+    });
+  }
+
+  for (let y = 0; y < cH; y += step * scale) {
+    for (let x = 0; x < cW; x += step * scale) {
+      const idx = (y * cW + x) * 4;
+      if (data[idx] > 128) {
+        // Which line does this y belong to?
+        let colorName = TEXT_LINES[0].color;
+        for (let li = 0; li < lineRanges.length; li++) {
+          if (y >= lineRanges[li].y0 && y < lineRanges[li].y1) {
+            colorName = lineRanges[li].colorName;
+            break;
+          }
+          // If between lines, attribute to nearest
+          colorName = lineRanges[li].colorName;
+        }
+        samples.push({
+          relX: x / scale,
+          relY: y / scale,
+          colorName,
+        });
+      }
     }
   }
 
-  return pixels;
+  return samples;
 }
 
-/* ---- Particle ---- */
+// ---- Image pixel sampling ----
+function sampleImagePixels(img, step) {
+  const imgW = img.naturalWidth;
+  const imgH = img.naturalHeight;
 
-function createParticle(sample, canvasW, canvasH, imgW, imgH) {
-  // Scale image to fit canvas with IMAGE_SCALE padding, maintaining aspect ratio
-  const scaleX = (canvasW * IMAGE_SCALE) / imgW;
-  const scaleY = (canvasH * IMAGE_SCALE) / imgH;
-  const scale = Math.min(scaleX, scaleY);
-  const offsetX = (canvasW - imgW * scale) / 2;
-  const offsetY = (canvasH - imgH * scale) / 2;
+  const offCanvas = document.createElement('canvas');
+  offCanvas.width  = imgW;
+  offCanvas.height = imgH;
+  const octx = offCanvas.getContext('2d');
+  octx.drawImage(img, 0, 0);
 
-  const spread = Math.max(canvasW, canvasH) * SPREAD_FACTOR;
-  const tx = sample.x * scale + offsetX;
-  const ty = sample.y * scale + offsetY;
+  let data;
+  try {
+    const imageData = octx.getImageData(0, 0, imgW, imgH);
+    data = imageData.data;
+  } catch {
+    // Chrome blocks getImageData on canvas with file:// images (CORS taint).
+    return { samples: [], imgW, imgH };
+  }
 
+  const samples = [];
+  for (let y = 0; y < imgH; y += step) {
+    for (let x = 0; x < imgW; x += step) {
+      const idx = (y * imgW + x) * 4;
+      if (data[idx + 3] > 128) {
+        samples.push({
+          relX: x,
+          relY: y,
+          r:    data[idx],
+          g:    data[idx + 1],
+          b:    data[idx + 2],
+        });
+      }
+    }
+  }
+  return { samples, imgW, imgH };
+}
+
+// ---- Layout helpers ----
+function calcImageLayout(regionW, regionH, imgW, imgH) {
+  const imgAspect    = imgW / imgH;
+  const regionAspect = regionW / regionH;
+  let displayW, displayH;
+  if (imgAspect > regionAspect) {
+    displayW = regionW * IMAGE_SCALE;
+    displayH = displayW / imgAspect;
+  } else {
+    displayH = regionH * IMAGE_SCALE;
+    displayW = displayH * imgAspect;
+  }
   return {
-    // Current position — scattered across canvas
-    x: (Math.random() - 0.5) * spread + canvasW / 2,
-    y: (Math.random() - 0.5) * spread + canvasH / 2,
-    // Target position — forms the image (modified by wave offset each frame)
-    targetX: tx,
-    targetY: ty,
-    // Original unmodified target (wave offset is applied to this)
-    origTargetX: tx,
-    origTargetY: ty,
-    // Velocity for spring physics
-    vx: 0,
-    vy: 0,
-    // Visual
-    baseRadius: randomBetween(1, 2.5),
-    radius: randomBetween(1, 2.5),
-    // Actual pixel color from image
-    r: sample.r,
-    g: sample.g,
-    b: sample.b,
-    // Glow alpha
-    alpha: randomBetween(0.5, 1),
-    pulsePhase: Math.random() * Math.PI * 2,
-    arrived: false,
-    arriveTime: 0,
-    // Wave animation parameters
-    wavePhase: Math.random() * Math.PI * 2,
-    waveAmplitude: randomBetween(0.5, 2),
-    // Staggered start delay (ms) — creates dramatic wave arrival
-    staggerDelay: Math.random() * 1000,
+    displayW,
+    displayH,
+    offsetX: (regionW - displayW) / 2,
+    offsetY: (regionH - displayH) / 2,
   };
 }
 
-/* ---- Main init ---- */
+function getRegions(w, h) {
+  const isMobile = w < MOBILE_BREAKPOINT;
+  if (isMobile) {
+    return {
+      textRegion:  { x: 0,     y: 0,     w, h: h / 2 },
+      imageRegion: { x: 0,     y: h / 2, w, h: h / 2 },
+      isMobile:    true,
+    };
+  }
+  return {
+    textRegion:  { x: 0,     y: 0, w: w / 2, h },
+    imageRegion: { x: w / 2, y: 0, w: w / 2, h },
+    isMobile:    false,
+  };
+}
 
+// ---- Particle factories ----
+function createTextParticle(sample, region) {
+  const spread  = Math.max(region.w, region.h) * SPREAD_FACTOR;
+  const centerX = region.x + region.w / 2;
+  const centerY = region.y + region.h / 2;
+  return {
+    type:         'text',
+    x:            (Math.random() - 0.5) * spread + centerX,
+    y:            (Math.random() - 0.5) * spread + centerY,
+    targetX:      region.x + sample.relX,
+    targetY:      region.y + sample.relY,
+    origTargetX:  region.x + sample.relX,
+    origTargetY:  region.y + sample.relY,
+    vx:           0,
+    vy:           0,
+    colorName:    sample.colorName,
+    r: 0, g: 0, b: 0,
+    baseRadius:   randomBetween(BASE_RADIUS_MIN, BASE_RADIUS_MAX),
+    radius:       randomBetween(BASE_RADIUS_MIN, BASE_RADIUS_MAX),
+    alpha:        randomBetween(0.5, 1),
+    pulsePhase:   Math.random() * Math.PI * 2,
+    arrived:      false,
+    arriveTime:   0,
+    staggerDelay: Math.random() * STAGGER_DELAY_MAX,
+  };
+}
+
+function createImageParticle(sample, region, layout, imgW, imgH) {
+  const spread  = Math.max(region.w, region.h) * SPREAD_FACTOR;
+  const centerX = region.x + region.w / 2;
+  const centerY = region.y + region.h / 2;
+  const tx = region.x + layout.offsetX + (sample.relX / imgW) * layout.displayW;
+  const ty = region.y + layout.offsetY + (sample.relY / imgH) * layout.displayH;
+  return {
+    type:         'image',
+    x:            (Math.random() - 0.5) * spread + centerX,
+    y:            (Math.random() - 0.5) * spread + centerY,
+    targetX:      tx,
+    targetY:      ty,
+    origTargetX:  tx,
+    origTargetY:  ty,
+    vx:           0,
+    vy:           0,
+    r:            sample.r,
+    g:            sample.g,
+    b:            sample.b,
+    colorName:    '',
+    baseRadius:   randomBetween(BASE_RADIUS_MIN, BASE_RADIUS_MAX),
+    radius:       randomBetween(BASE_RADIUS_MIN, BASE_RADIUS_MAX),
+    alpha:        randomBetween(0.5, 1),
+    pulsePhase:   Math.random() * Math.PI * 2,
+    arrived:      false,
+    arriveTime:   0,
+    staggerDelay: Math.random() * STAGGER_DELAY_MAX,
+  };
+}
+
+// ---- Main export ----
 export function initHeroParticles(canvas) {
   if (!canvas) return;
 
@@ -150,233 +332,386 @@ export function initHeroParticles(canvas) {
   if (!ctx) return;
 
   let w, h;
-  let particles = [];
-  let img = null;
-  let imgW = 0;
-  let imgH = 0;
-  let samples = [];
-  let lastTime = 0;
-  let rafId = null;
+  let particles     = [];
+  let textSamples   = [];
+  let imageSamples  = [];
+  let imgRef        = null;
+  let imgW          = 0;
+  let imgH          = 0;
+  let lastTime      = 0;
+  let rafId         = null;
   let assemblyFraction = 0;
-  let frameCount = 0;
-  let loaded = false;
-  let assembled = false;
-  let startTime = 0;
+  let frameCount    = 0;
+  let loaded        = false;
+  let startTime     = 0;          // ms timestamp when animation actually began
+  let imageLoaded   = false;
 
-  // Reusable arrays for connection drawing (avoids per-frame allocation)
-  const arrivedParticles = [];
-  const connected = [];
+  // Mouse tracking — canvas-local CSS pixel coordinates.
+  // We own this entirely; no dependency on window.portfolio.mouse format.
+  let mouseX = -9999;
+  let mouseY = -9999;
+  let mouseInside = false;
 
-  /* ---- Resize ---- */
+  function onMouseMove(e) {
+    const r  = canvas.getBoundingClientRect();
+    mouseX   = e.clientX - r.left;
+    mouseY   = e.clientY - r.top;
+    mouseInside = true;
+  }
+  function onMouseLeave() {
+    mouseInside = false;
+  }
+  function onTouchMove(e) {
+    if (e.touches.length === 0) return;
+    const r  = canvas.getBoundingClientRect();
+    mouseX   = e.touches[0].clientX - r.left;
+    mouseY   = e.touches[0].clientY - r.top;
+    mouseInside = true;
+  }
+  function onTouchEnd() {
+    // Let the last touch position linger briefly so particles don't snap back instantly
+    setTimeout(() => { mouseInside = false; }, 300);
+  }
 
+  window.addEventListener('mousemove',  onMouseMove,  { passive: true });
+  canvas.addEventListener('mouseleave', onMouseLeave, { passive: true });
+  canvas.addEventListener('touchmove',  onTouchMove,  { passive: true });
+  canvas.addEventListener('touchend',   onTouchEnd,   { passive: true });
+
+  // Reusable per-frame arrays (avoids GC churn)
+  const textArrived  = [];
+  const imageArrived = [];
+
+  // ---- Resize ----
   function resize() {
     const parent = canvas.parentElement;
     if (!parent) return;
+
     const rect = parent.getBoundingClientRect();
     w = rect.width;
     h = rect.height;
+
+    // FIX: clamp DPR to 2 to avoid extreme canvas sizes on high-density screens.
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
+    canvas.width        = Math.round(w * dpr);
+    canvas.height       = Math.round(h * dpr);
+    canvas.style.width  = w + 'px';
     canvas.style.height = h + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Set device info on portfolio
     if (!window.portfolio) window.portfolio = {};
     const nowMobile = w < MOBILE_BREAKPOINT;
     const wasMobile = window.portfolio.isMobile;
     window.portfolio.isMobile = nowMobile;
 
-    // Redraw static image on resize for reduced motion
-    if (loaded && (window.portfolio?.reducedMotion ?? false)) {
-      drawStaticImage();
+    if (window.portfolio?.reducedMotion) {
+      drawStaticContent();
+      return;
     }
 
-    // If breakpoint was crossed, re-sample particles
-    if (loaded && particles.length > 0 && wasMobile !== nowMobile) {
+    // Re-init on breakpoint crossing only
+    if (loaded && wasMobile !== undefined && wasMobile !== nowMobile) {
       initParticles();
       return;
     }
 
-    // Recalc particle targets on resize (scale/offset change with canvas size)
+    // Otherwise just recalc target positions
     if (loaded && particles.length > 0) {
       recalcTargets();
     }
   }
 
-  /* ---- Particle initialisation ---- */
-
+  // ---- Init particles ----
   function initParticles() {
-    const step = w < MOBILE_BREAKPOINT ? MOBILE_STEP : DESKTOP_STEP;
-    samples = sampleImagePixels(img, step);
+    const regions = getRegions(w, h);
 
-    // Fallback if sampling yields nothing
-    if (samples.length === 0) {
-      for (let i = 0; i < 200; i++) {
-        samples.push({
-          x: Math.random() * imgW,
-          y: Math.random() * imgH,
-          r: 255,
-          g: 255,
-          b: 255,
-        });
+    // Text
+    textSamples = sampleTextLines(regions.textRegion.w, regions.textRegion.h, regions.isMobile);
+    const textParticles = textSamples.map((s) => createTextParticle(s, regions.textRegion));
+
+    // Image
+    let allParticles = textParticles;
+    if (imageLoaded && imgRef) {
+      const imgStep = regions.isMobile ? MOBILE_IMAGE_STEP : DESKTOP_IMAGE_STEP;
+      const result  = sampleImagePixels(imgRef, imgStep);
+      if (result.samples.length > 0) {
+        imageSamples = result.samples;
+        imgW = result.imgW;
+        imgH = result.imgH;
+        const layout        = calcImageLayout(regions.imageRegion.w, regions.imageRegion.h, imgW, imgH);
+        const imageParticles = imageSamples.map((s) =>
+          createImageParticle(s, regions.imageRegion, layout, imgW, imgH)
+        );
+        allParticles = textParticles.concat(imageParticles);
+      } else {
+        // CORS taint — text only
+        imageLoaded = false;
       }
     }
 
-    particles = samples.map((s) => createParticle(s, w, h, imgW, imgH));
+    particles        = allParticles;
     assemblyFraction = 0;
+    startTime        = 0;   // will be set on first loop tick
+    loaded           = true;
   }
 
-  /* ---- Recalculate targets on resize ---- */
-
+  // ---- Recalc targets on resize ----
   function recalcTargets() {
-    if (!loaded || samples.length === 0) return;
-    const scaleX = (w * IMAGE_SCALE) / imgW;
-    const scaleY = (h * IMAGE_SCALE) / imgH;
-    const scale = Math.min(scaleX, scaleY);
-    const offsetX = (w - imgW * scale) / 2;
-    const offsetY = (h - imgH * scale) / 2;
-    for (let i = 0; i < particles.length; i++) {
-      const s = samples[i];
-      if (!s) continue;
-      const tx = s.x * scale + offsetX;
-      const ty = s.y * scale + offsetY;
-      particles[i].origTargetX = tx;
-      particles[i].origTargetY = ty;
+    if (!loaded) return;
+    const regions = getRegions(w, h);
+
+    // Text particles
+    for (let i = 0; i < textSamples.length && i < particles.length; i++) {
+      const p = particles[i];
+      const s = textSamples[i];
+      if (!p || !s) continue;
+      p.targetX     = regions.textRegion.x + s.relX;
+      p.targetY     = regions.textRegion.y + s.relY;
+      p.origTargetX = p.targetX;
+      p.origTargetY = p.targetY;
+    }
+
+    // Image particles
+    if (imageLoaded && imgRef) {
+      const layout = calcImageLayout(regions.imageRegion.w, regions.imageRegion.h, imgW, imgH);
+      const offset = textSamples.length;
+      for (let i = 0; i < imageSamples.length; i++) {
+        const p = particles[offset + i];
+        const s = imageSamples[i];
+        if (!p || !s) continue;
+        const tx = regions.imageRegion.x + layout.offsetX + (s.relX / imgW) * layout.displayW;
+        const ty = regions.imageRegion.y + layout.offsetY + (s.relY / imgH) * layout.displayH;
+        p.targetX     = tx;
+        p.targetY     = ty;
+        p.origTargetX = tx;
+        p.origTargetY = ty;
+      }
     }
   }
 
-  /* ---- Draw static image (reduced motion) ---- */
-
-  function drawStaticImage() {
-    if (!img || !w || !h) return;
+  // ---- Static / reduced-motion render ----
+  function drawStaticContent() {
+    if (!w || !h) return;
     ctx.clearRect(0, 0, w, h);
+    const regions = getRegions(w, h);
 
-    const scaleX = (w * IMAGE_SCALE) / imgW;
-    const scaleY = (h * IMAGE_SCALE) / imgH;
-    const scale = Math.min(scaleX, scaleY);
-    const dw = imgW * scale;
-    const dh = imgH * scale;
-    const dx = (w - dw) / 2;
-    const dy = (h - dh) / 2;
+    // Re-use the same vertical-centring logic as the particle sampler
+    const scale = 2;
+    const cW    = Math.round(regions.textRegion.w * scale);
+    const cH    = Math.round(regions.textRegion.h * scale);
 
-    ctx.drawImage(img, dx, dy, dw, dh);
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width  = cW;
+    offCanvas.height = cH;
+    const octx = offCanvas.getContext('2d');
+    octx.textBaseline = 'top';
+    octx.textAlign    = 'center';
+
+    const maxW = cW * 0.9;
+    const lineMeta = TEXT_LINES.map((line) => {
+      let size = line.fontSize * scale;
+      octx.font = `bold ${size}px "Space Grotesk", "DM Sans", sans-serif`;
+      const mw  = octx.measureText(line.text).width;
+      if (mw > maxW) size = size * (maxW / mw);
+      octx.font = `bold ${size}px "Space Grotesk", "DM Sans", sans-serif`;
+      const m   = octx.measureText(line.text);
+      const lineH = (m.actualBoundingBoxAscent  ?? size * 0.8) +
+                    (m.actualBoundingBoxDescent ?? size * 0.2);
+      return { size, lineH, color: line.color, text: line.text };
+    });
+
+    const totalH = lineMeta.reduce((s, l) => s + l.lineH, 0);
+    const gaps   = lineMeta.reduce((s, l) => s + l.lineH * 0.25, 0);
+    let cy       = (cH - totalH - gaps) / 2;
+
+    lineMeta.forEach((lm) => {
+      const hex = COLORS[lm.color]();
+      octx.font        = `bold ${lm.size}px "Space Grotesk", "DM Sans", sans-serif`;
+      octx.shadowColor = hex;
+      octx.shadowBlur  = 30;
+      octx.fillStyle   = hexToRgba(hex, 0.15);
+      octx.fillText(lm.text, cW / 2, cy);
+      octx.shadowBlur  = 0;
+      octx.fillStyle   = hexToRgba(hex, 0.6);
+      octx.fillText(lm.text, cW / 2, cy);
+      cy += lm.lineH + lm.lineH * 0.25;
+    });
+
+    ctx.drawImage(offCanvas, regions.textRegion.x, regions.textRegion.y,
+                             regions.textRegion.w,  regions.textRegion.h);
+
+    if (imgRef) {
+      const layout = calcImageLayout(regions.imageRegion.w, regions.imageRegion.h, imgW, imgH);
+      ctx.drawImage(imgRef,
+        regions.imageRegion.x + layout.offsetX,
+        regions.imageRegion.y + layout.offsetY,
+        layout.displayW, layout.displayH
+      );
+    }
   }
 
-  /* ---- Animation loop ---- */
+  // ---- Connection drawing (called per-frame) ----
+  // FIX: stopped shuffling every frame — flickered wildly.
+  // Instead, choose a stable MAX_COUNT window per-type at init/arrive time
+  // and redraw from that stable set. Here we iterate sequentially (first N).
+  function drawConnections(arr, settled) {
+    const len = Math.min(arr.length, CONNECTION_MAX_COUNT);
+    for (let i = 0; i < len; i++) {
+      const a = arr[i];
+      for (let j = i + 1; j < len; j++) {
+        const b = arr[j];
 
+        // Only draw when at least one particle is displaced
+        if (settled) {
+          const aDisp = Math.abs(a.x - a.origTargetX) > DISPLACED_THRESHOLD ||
+                        Math.abs(a.y - a.origTargetY) > DISPLACED_THRESHOLD;
+          const bDisp = Math.abs(b.x - b.origTargetX) > DISPLACED_THRESHOLD ||
+                        Math.abs(b.y - b.origTargetY) > DISPLACED_THRESHOLD;
+          if (!aDisp && !bDisp) continue;
+        }
+
+        const dx   = a.x - b.x;
+        const dy   = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist >= CONNECTION_MAX_DIST) continue;
+
+        const opacity = (1 - dist / CONNECTION_MAX_DIST) * CONNECTION_OPACITY;
+        let strokeColor;
+        if (a.type === 'text') {
+          const hex = a.colorName ? COLORS[a.colorName]?.() : '#00e5ff';
+          strokeColor = hexToRgba(hex, opacity);
+        } else {
+          const avgR = (a.r + b.r) >> 1;
+          const avgG = (a.g + b.g) >> 1;
+          const avgB = (a.b + b.b) >> 1;
+          strokeColor = `rgba(${avgR},${avgG},${avgB},${opacity})`;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle  = strokeColor;
+        ctx.lineWidth    = CONNECTION_LINE_WIDTH;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // ---- Animation loop ----
   function loop(timestamp) {
-    // Always schedule next frame so toggling reducedMotion can restart
     rafId = requestAnimationFrame(loop);
 
     if (window.portfolio?.reducedMotion ?? false) {
-      drawStaticImage();
+      drawStaticContent();
       return;
     }
 
-    // Pause rendering when hero section is not in viewport
+    // Pause when hero is off-screen
     const heroEl = document.getElementById('hero');
     if (heroEl) {
       const rect = heroEl.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) {
-        return;
-      }
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
     }
 
-    // If image not yet loaded, skip frame
-    if (!loaded || particles.length === 0) {
-      return;
-    }
+    if (!loaded || particles.length === 0) return;
 
-    const dt = lastTime ? Math.min((timestamp - lastTime) / 16.667, 3) : 1;
-    lastTime = timestamp;
+    // FIX: cap dt to a maximum of 2 normalised frames to prevent explosion
+    // after tab-switch, DevTools open, or slow first paint.
+    // Using 1 on the very first tick (lastTime === 0) is correct —
+    // but we also reset lastTime when startTime resets so the cap applies cleanly.
+    const rawDt = lastTime ? (timestamp - lastTime) / 16.667 : 1;
+    const dt    = Math.min(rawDt, 2);          // hard cap: never more than 2× speed
+    lastTime    = timestamp;
 
-    // Track start time for staggered particle activation
+    // Latch start time
     if (startTime === 0) startTime = timestamp;
 
-    // Advance assembly over ~2 seconds (ASSEMBLY_FRAMES frames at 60fps)
+    // Advance assembly counter frame-by-frame (dt-scaled for fair timing)
     if (assemblyFraction < 1) {
       assemblyFraction = Math.min(1, assemblyFraction + dt / ASSEMBLY_FRAMES);
     }
-    if (assemblyFraction >= 1 && !assembled) {
-      assembled = true;
-    }
+    const settled = assemblyFraction >= 1;
 
-    // Cyclic counter (0 to REPULSION_THROTTLE-1) to throttle repulsion calc
-    frameCount = (frameCount + 1) % REPULSION_THROTTLE;
+    // Mouse — use canvas-local coordinates captured by our own listeners.
+    frameCount++;
+    const doMouseRepel      = (frameCount % REPULSION_EVERY_N) === 0;
+    const mx                = mouseX;
+    const my                = mouseY;
+    const mouseInsideCanvas = mouseInside;
 
-    // portfolio.mouse.x/y are normalized 0-1 fractions of viewport,
-    // convert to canvas-relative pixels via getBoundingClientRect
-    const rect = canvas.getBoundingClientRect();
-    const mx = ((window.portfolio?.mouse?.x ?? 0.5) * window.innerWidth) - rect.left;
-    const my = ((window.portfolio?.mouse?.y ?? 0.5) * window.innerHeight) - rect.top;
-    const mouseActive = mx >= 0 && my >= 0 && mx <= rect.width && my <= rect.height;
+    // Ease curve for assembly alpha
+    const easeT = assemblyFraction < 0.5
+      ? 2 * assemblyFraction * assemblyFraction
+      : 1 - Math.pow(-2 * assemblyFraction + 2, 2) / 2;
 
-    // Throttle mouse repulsion: only recalc every REPULSION_THROTTLE frames
-    const recalcRepulsion = frameCount === 0;
-
-    const time = timestamp || 0;
-
-    // Update particles
+    // ---- Update ----
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
 
-      // Staggered start: skip particles that haven't been activated yet
+      // Stagger: skip until particle's personal delay has elapsed
       const elapsed = timestamp - startTime;
       if (elapsed < p.staggerDelay) continue;
 
-      // Wave/flow offset — sinusoidal displacement from original target
-      const waveAmp = assembled ? Math.min(p.waveAmplitude, WAVE_AMP_MAX) : p.waveAmplitude;
-      const waveOffsetX = Math.sin(time * WAVE_SPEED + p.wavePhase) * waveAmp;
-      const waveOffsetY = Math.cos(time * WAVE_SPEED + p.wavePhase) * waveAmp;
-      p.targetX = p.origTargetX + waveOffsetX;
-      p.targetY = p.origTargetY + waveOffsetY;
+      if (settled) {
+        // ---- Settle phase — damping-only, no spring recovery ----
 
-      // Eased assembly fraction (ease-out quad) — used for alpha fade
-      const easeT = assemblyFraction < 0.5
-        ? 2 * assemblyFraction * assemblyFraction
-        : 1 - Math.pow(-2 * assemblyFraction + 2, 2) / 2;
-
-      // Spring physics: drift toward target (fast for assembly, overdamped for stable)
-      const springK = assembled ? SPRING_K_STABLE : SPRING_K_FAST;
-      const dampK = assembled ? DAMP_K_STABLE : DAMP_K_FAST;
-      const dx = p.targetX - p.x;
-      const dy = p.targetY - p.y;
-      const ax = dx * springK - p.vx * dampK;
-      const ay = dy * springK - p.vy * dampK;
-
-      p.vx += ax * dt;
-      p.vy += ay * dt;
-
-      // Mouse repulsion (throttled to every REPULSION_THROTTLE frames)
-      if (mouseActive && recalcRepulsion) {
-        const mdx = p.x - mx;
-        const mdy = p.y - my;
-        const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-        if (mDist < REPEL_RANGE && mDist > 0) {
-          const repelStrength = (1 - mDist / REPEL_RANGE) * (assembled ? REPEL_FORCE_STABLE : 0.8);
-          p.vx += (mdx / mDist) * repelStrength * dt * 2;
-          p.vy += (mdy / mDist) * repelStrength * dt * 2;
+        // FIX: mouse repulsion now actually works.
+        // Previous code had REPULSION_THROTTLE = 0.3 and checked
+        // `frameCount === 0` after `frameCount % 0.3`, which is always a float,
+        // so repulsion was NEVER applied.
+        if (mouseInsideCanvas && doMouseRepel) {
+          const mdx  = p.x - mx;
+          const mdy  = p.y - my;
+          const mDist2 = mdx * mdx + mdy * mdy;
+          if (mDist2 < REPEL_RANGE * REPEL_RANGE && mDist2 > 0) {
+            const mDist = Math.sqrt(mDist2);
+            const strength = (1 - mDist / REPEL_RANGE) * REPEL_FORCE;
+            p.vx += (mdx / mDist) * strength * dt;
+            p.vy += (mdy / mDist) * strength * dt;
+          }
         }
+
+        // FIX: apply damping correctly as a per-frame exponent so it's
+        // frame-rate independent without accumulating non-linearly.
+        const dampFactor = Math.pow(SETTLE_DAMP, dt);
+        p.vx *= dampFactor;
+        p.vy *= dampFactor;
+        if (Math.abs(p.vx) < VELOCITY_EPSILON) p.vx = 0;
+        if (Math.abs(p.vy) < VELOCITY_EPSILON) p.vy = 0;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+      } else {
+        // ---- Assembly phase — spring convergence ----
+        // FIX: separate the spring force (position-only) from the damping
+        // (velocity-only).  Original code baked DAMP_K_FAST into the acceleration
+        // *and* multiplied both by dt, causing explosive growth when dt > 1.
+        //
+        // Correct semi-implicit Euler for a damped spring:
+        //   accel  = k * (target - pos)          [spring; no dt multiply here]
+        //   vel   += accel * dt                  [integrate velocity]
+        //   vel   *= damp^dt                     [apply damping after integration]
+        //   pos   += vel * dt                    [integrate position]
+        const dx    = p.targetX - p.x;
+        const dy    = p.targetY - p.y;
+        p.vx += dx * SPRING_K * dt;
+        p.vy += dy * SPRING_K * dt;
+        const dampF = Math.pow(SPRING_DAMP, dt);
+        p.vx *= dampF;
+        p.vy *= dampF;
+        p.x  += p.vx * dt;
+        p.y  += p.vy * dt;
       }
 
-      // (No separate multiplicative damping — spring viscous damping handles it)
-
-      // Update position
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
-
-      // Check arrival (against original target — wave offset is cosmetic only)
-      const distToTarget = Math.sqrt(
-        (p.origTargetX - p.x) * (p.origTargetX - p.x) + (p.origTargetY - p.y) * (p.origTargetY - p.y)
-      );
-      if (distToTarget < ARRIVAL_THRESHOLD && !p.arrived) {
-        p.arrived = true;
+      // Arrival detection
+      const ddx = p.origTargetX - p.x;
+      const ddy = p.origTargetY - p.y;
+      if (!p.arrived && ddx * ddx + ddy * ddy < ARRIVAL_THRESHOLD * ARRIVAL_THRESHOLD) {
+        p.arrived    = true;
         p.arriveTime = timestamp;
       }
 
-      // Pulse radius on arrival
+      // Pulse radius when settled at target
       if (p.arrived) {
         const pulse = Math.sin(timestamp * PULSE_SPEED + p.pulsePhase) * PULSE_AMPLITUDE + 1;
         p.radius = p.baseRadius * pulse;
@@ -385,114 +720,101 @@ export function initHeroParticles(canvas) {
       }
     }
 
-    // --- Render ---
+    // ---- Render ----
     ctx.clearRect(0, 0, w, h);
 
-    // Collect arrived particles (reuse array — clear then fill)
-    arrivedParticles.length = 0;
-    connected.length = 0;
+    // Collect arrived particles by type
+    textArrived.length  = 0;
+    imageArrived.length = 0;
     for (let i = 0; i < particles.length; i++) {
-      if (particles[i].arrived) arrivedParticles.push(particles[i]);
-    }
-    const maxConnections = Math.min(arrivedParticles.length, CONNECTION_MAX_COUNT);
-    // Randomly sample via partial Fisher-Yates shuffle (avoids O(n×k) splice)
-    if (arrivedParticles.length > 0) {
-      const k = Math.min(maxConnections, arrivedParticles.length);
-      for (let i = 0; i < k; i++) {
-        const j = i + Math.floor(Math.random() * (arrivedParticles.length - i));
-        [arrivedParticles[i], arrivedParticles[j]] = [arrivedParticles[j], arrivedParticles[i]];
-      }
-      for (let i = 0; i < k; i++) connected.push(arrivedParticles[i]);
-    }
-    for (let i = 0; i < connected.length; i++) {
-      const a = connected[i];
-      for (let j = i + 1; j < connected.length; j++) {
-        const b = connected[j];
-
-        // In stable phase, only draw connections when at least one particle is displaced
-        if (assembled) {
-          const aDisplaced = Math.abs(a.x - a.origTargetX) > DISPLACED_THRESHOLD || Math.abs(a.y - a.origTargetY) > DISPLACED_THRESHOLD;
-          const bDisplaced = Math.abs(b.x - b.origTargetX) > DISPLACED_THRESHOLD || Math.abs(b.y - b.origTargetY) > DISPLACED_THRESHOLD;
-          if (!aDisplaced && !bDisplaced) continue;
-        }
-
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < CONNECTION_MAX_DIST) {
-          const opacity = (1 - dist / CONNECTION_MAX_DIST) * CONNECTION_OPACITY;
-          // Blend colors between the two connected particles
-          const avgR = Math.round((a.r + b.r) / 2);
-          const avgG = Math.round((a.g + b.g) / 2);
-          const avgB = Math.round((a.b + b.b) / 2);
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(${avgR},${avgG},${avgB},${opacity})`;
-          ctx.lineWidth = CONNECTION_LINE_WIDTH;
-          ctx.stroke();
-        }
+      const p = particles[i];
+      if (p.arrived) {
+        if (p.type === 'text') textArrived.push(p);
+        else                   imageArrived.push(p);
       }
     }
+
+    drawConnections(textArrived,  settled);
+    drawConnections(imageArrived, settled);
 
     // Draw particles
     for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      const r = p.radius;
-      // Use eased assembly fraction (easeT) for smoother fade-in
+      const p     = particles[i];
+      const r     = p.radius;
       const alpha = p.arrived ? p.alpha : p.alpha * Math.min(1, easeT);
+
+      // Build rgba factory for this particle
+      let rgba;
+      if (p.type === 'text') {
+        const hex = p.colorName ? (COLORS[p.colorName]?.() ?? '#00e5ff') : '#00e5ff';
+        rgba = (a) => hexToRgba(hex, a);
+      } else {
+        const col = `rgba(${p.r},${p.g},${p.b},`;
+        rgba = (a) => col + a + ')';
+      }
 
       // Glow ring
       ctx.beginPath();
-      ctx.arc(p.x, p.y, r + 2, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha * 0.1})`;
+      ctx.arc(p.x, p.y, r + GLOW_RING_OFFSET, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(alpha * GLOW_ALPHA);
       ctx.fill();
 
       // Core dot
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha * 0.8})`;
+      ctx.fillStyle = rgba(alpha * CORE_ALPHA);
       ctx.fill();
 
-      // Bright center
+      // Bright centre
       ctx.beginPath();
-      ctx.arc(p.x, p.y, r * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha * 0.4})`;
+      ctx.arc(p.x, p.y, r * CENTER_RADIUS_RATIO, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(alpha * CENTER_ALPHA);
       ctx.fill();
     }
   }
 
-  /* ---- Start ---- */
-
+  // ---- Bootstrap ----
   resize();
   window.addEventListener('resize', resize);
 
-  // Load image asynchronously — start immediately, only animate once loaded
-  loadImage('assets/profile.jpg')
-    .then((loadedImg) => {
-      img = loadedImg;
-      imgW = img.naturalWidth || img.width;
-      imgH = img.naturalHeight || img.height;
-      loaded = true;
+  if (window.portfolio?.reducedMotion ?? false) {
+    drawStaticContent();
+  } else {
+    // Start RAF immediately; particles are added once image resolves
+    rafId = requestAnimationFrame(loop);
 
-      if (window.portfolio?.reducedMotion ?? false) {
-        drawStaticImage();
-      } else {
+    loadImage(IMAGE_PATH)
+      .then((img) => {
+        imgRef      = img;
+        imgW        = img.naturalWidth;
+        imgH        = img.naturalHeight;
+        imageLoaded = true;
         initParticles();
-        rafId = requestAnimationFrame(loop);
-      }
-    })
-    .catch((err) => {
-      console.error('Hero particles: failed to load image', err);
-    });
+        if (window.portfolio?.reducedMotion) drawStaticContent();
+      })
+      .catch(() => {
+        // Image failed — render text particles only
+        imageLoaded = false;
+        initParticles();
+      });
 
-  /* ---- Cleanup ---- */
+    // If image hasn't resolved within 500 ms, start text particles immediately.
+    // initParticles() will be called again (harmlessly) when the image loads.
+    setTimeout(() => { if (!loaded) initParticles(); }, 500);
+  }
 
+  // ---- Teardown ----
   return function destroy() {
     if (rafId) cancelAnimationFrame(rafId);
     window.removeEventListener('resize', resize);
-    particles = [];
-    img = null;
-    loaded = false;
+    window.removeEventListener('mousemove', onMouseMove);
+    canvas.removeEventListener('mouseleave', onMouseLeave);
+    canvas.removeEventListener('touchmove',  onTouchMove);
+    canvas.removeEventListener('touchend',   onTouchEnd);
+    particles    = [];
+    textSamples  = [];
+    imageSamples = [];
+    imgRef       = null;
+    loaded       = false;
   };
 }
