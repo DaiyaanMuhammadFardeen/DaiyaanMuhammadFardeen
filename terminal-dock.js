@@ -157,12 +157,11 @@ function handleCommand(cmd, output, startTime) {
   const writeOutput = (text) => {
     output.classList.add('terminal-output--visible');
     const line = document.createElement('div');
-    line.style.marginBottom = '4px';
+    line.className = 'terminal-output__cmd';
     line.textContent = `$ ${cmd}`;
     output.appendChild(line);
     const resp = document.createElement('div');
-    resp.style.marginBottom = '8px';
-    resp.style.color = 'var(--accent-cyan)';
+    resp.className = 'terminal-output__resp';
     resp.textContent = text;
     output.appendChild(resp);
     output.scrollTop = output.scrollHeight;
@@ -303,7 +302,11 @@ function handleCommand(cmd, output, startTime) {
       return;
 
     case 'echo':
-      writeOutput(args.slice(1).join(' ') || '');
+      if (args[1] === '$MOTD') {
+        fetchQuote(output, cmd);
+      } else {
+        writeOutput(args.slice(1).join(' ') || '');
+      }
       return;
 
     case 'date':
@@ -336,6 +339,31 @@ function handleCommand(cmd, output, startTime) {
   }
 }
 
+/* ── Fetch Programming Quote ── */
+async function fetchQuote(output, cmd) {
+  const writeOut = (text) => {
+    output.classList.add('terminal-output--visible');
+    const line = document.createElement('div');
+    line.className = 'terminal-output__cmd';
+    line.textContent = `$ ${cmd}`;
+    output.appendChild(line);
+    const resp = document.createElement('div');
+    resp.className = 'terminal-output__resp';
+    resp.textContent = text;
+    output.appendChild(resp);
+    output.scrollTop = output.scrollHeight;
+  };
+
+  try {
+    const res = await fetch('https://programming-quotes-api.herokuapp.com/quotes/random');
+    if (!res.ok) throw new Error(`API: ${res.status}`);
+    const data = await res.json();
+    writeOut(`"${data.en}"\n  \u2014 ${data.author} (rating: ${data.rating ?? 'N/A'})`);
+  } catch {
+    writeOut('MOTD: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand."\n  \u2014 Martin Fowler (offline fallback)');
+  }
+}
+
 /* ── Matrix Overlay Toggle (with 5-click easter egg) ── */
 function toggleMatrixOverlay(output, cmd) {
   const overlay = document.getElementById('matrix-overlay');
@@ -344,12 +372,11 @@ function toggleMatrixOverlay(output, cmd) {
   const writeOut = (text) => {
     output.classList.add('terminal-output--visible');
     const line = document.createElement('div');
-    line.style.marginBottom = '4px';
+    line.className = 'terminal-output__cmd';
     line.textContent = `$ ${cmd}`;
     output.appendChild(line);
     const resp = document.createElement('div');
-    resp.style.marginBottom = '8px';
-    resp.style.color = 'var(--accent-cyan)';
+    resp.className = 'terminal-output__resp';
     resp.textContent = text;
     output.appendChild(resp);
     output.scrollTop = output.scrollHeight;
