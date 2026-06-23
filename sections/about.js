@@ -94,7 +94,16 @@ const ABOUT_COMMANDS = {
   'uname -a': 'neural-terminal 6.2.0-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux | DaiyaanOS v2.4.1',
   date: () => new Date().toString(),
   uptime: 'up 2h 13m — sessions: 847 active neurons',
-  'echo $MOTD': "Welcome to Daiyaan's neural interface. The system is watching. Be productive.",
+  'echo $MOTD': async () => {
+    try {
+      const res = await fetch('https://programming-quotes-api.herokuapp.com/quotes/random');
+      if (!res.ok) throw new Error(`API: ${res.status}`);
+      const data = await res.json();
+      return `"${data.en}"\n  — ${data.author} (rating: ${data.rating ?? 'N/A'})`;
+    } catch {
+      return 'MOTD: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand."\n  — Martin Fowler (offline fallback)';
+    }
+  },
   neofetch: `daiyaan@neural-os\n-----------------\nOS: Arch Linux x86_64\nKernel: 6.2.0-arch1-1\nShell: zsh 5.9\nTerminal: neural-terminal\nCPU: AMD Ryzen 5 5600X\nGPU: AMD RX 6600\nMemory: 7956MiB / 15972MiB`,
   'skills --list': `Skills:\n├── Languages\n│   ├── Rust, C++, Python, Go, TypeScript\n│   ├── Java, JavaScript, Dart, Kotlin\n│   └── PHP, SQL, HTML, CSS, Bash\n├── AI / ML\n│   ├── PyTorch, Transformers, vLLM\n│   ├── ROCm, Hugging Face, Ollama\n│   └── RAG, NLP\n├── Systems\n│   ├── OpenGL, GPU Compute, ECS\n│   └── Linux, Arch, Neovim\n├── Backend\n│   ├── FastAPI, Spring Boot, Node.js\n│   ├── PostgreSQL, MongoDB, MySQL, Redis\n│   └── Docker, Celery\n├── Frontend\n│   ├── Next.js, React, JavaScript\n│   └── HTML, CSS, Flutter\n└── Tools\n    ├── Git, Neovim, ROCm, Ollama\n    └── Google AppScript, Dialog`,
   pwd: '/home/daiyaan/consciousness',
