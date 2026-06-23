@@ -476,37 +476,35 @@ a:hover {
 /* --- Hero --- */
 #hero {
   min-height: 100vh;
-  display: flex;
+  min-height: 100dvh;
   position: relative;
   overflow: hidden;
   z-index: 1;
 }
 
-.hero__content {
-  flex: 0 0 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 clamp(20px, 4vw, 60px) 0 clamp(20px, 8vw, 100px);
-  position: relative;
-  z-index: 2;
-}
-
-.hero__visual {
-  flex: 0 0 50%;
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Hero Particles Canvas */
+/* Hero Particles Canvas — full-viewport background */
 #hero-particles {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
+}
+
+/* Hero text overlay — absolute left center, sits above canvas */
+.hero__content {
+  position: absolute;
+  left: clamp(20px, 8vw, 100px);
+  top: 50%;
+  transform: translateY(100%);
+  z-index: 2;
+  max-width: 500px;
+  pointer-events: none;
+}
+
+.hero__content .btn-ghost {
+  pointer-events: auto;
 }
 
 .hero__eyebrow {
@@ -520,31 +518,17 @@ a:hover {
   transform: translateY(10px);
 }
 
-.hero__display {
-  font-family: var(--font-display);
-  font-size: clamp(3.5rem, 10vw, 9rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 0.95;
-  margin-bottom: 1.5rem;
-}
-
-.hero__display .typewriter-text {
-  display: block;
-}
-
 .hero__subtitle {
   font-family: var(--font-mono);
   font-size: clamp(0.9rem, 2.5vw, 1.3rem);
   color: var(--text-secondary);
   margin-bottom: 2rem;
-  opacity: 0;
+  opacity: 255;
 }
 
 .hero__cta {
   display: flex;
   gap: 16px;
-  justify-content: center;
   flex-wrap: wrap;
   opacity: 0;
   transform: translateY(20px);
@@ -1192,21 +1176,9 @@ a:hover {
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  #hero {
-    flex-direction: column;
-  }
-
   .hero__content {
-    flex: none;
-    padding: 100px 20px 30px;
+    padding: 80px 20px 30px;
     text-align: center;
-    align-items: center;
-  }
-
-  .hero__visual {
-    flex: 1;
-    width: 100%;
-    height: 50vh;
   }
 
   .hero__cta {
