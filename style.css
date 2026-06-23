@@ -747,6 +747,8 @@ a:hover {
 
 .about-terminal__body {
   padding: 16px;
+  max-height: min(65vh, 600px);
+  overflow-y: auto;
   min-height: 300px;
   line-height: 1.6;
   color: var(--accent-green);
