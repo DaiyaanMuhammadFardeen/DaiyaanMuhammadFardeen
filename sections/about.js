@@ -74,7 +74,7 @@ const TERMINAL_LINES = [
   { text: 'Competitive programmer \u2014 2nd place at AI Prompt Battle 2024.', cls: 'terminal-primary' },
   { text: '', cls: '' },
   { text: 'I care about efficiency. Not just algorithmic efficiency, but systems', cls: 'terminal-primary' },
-  { text: 'that respect the metal underneath \u2014 tight loops, cache-friendly data,', cls: 'terminal-primary' },
+  { text: 'that I can be proud of to build \u2014 tight loops, cache-friendly data,', cls: 'terminal-primary' },
   { text: 'and code that knows why it runs fast.', cls: 'terminal-primary' },
   { text: '', cls: '' },
   { text: 'Currently: building an AI-powered CV tailoring tool, engineering a', cls: 'terminal-primary' },
