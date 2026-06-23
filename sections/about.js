@@ -79,7 +79,7 @@ const TERMINAL_LINES = [
   { text: 'and code that knows why it runs fast.', cls: 'terminal-primary' },
   { text: '', cls: '' },
   { text: 'Currently: building an AI-powered CV tailoring tool, engineering a', cls: 'terminal-primary' },
-  { text: 'GPU cluster intelligence system, and completing my Mini Transformer thesis.', cls: 'terminal-primary' },
+  { text: 'GPU cluster intelligence system, and actively looking for work and opportunities.', cls: 'terminal-primary' },
   { text: '', cls: '' },
   { text: '────────────────────────────────────────', cls: 'terminal-muted' },
   { text: '  type \'help\' and press Enter  ▸  interactive terminal', cls: 'terminal-amber' },
