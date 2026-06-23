@@ -57,6 +57,16 @@ const featured = [
     icon: '◇',
   },
   {
+    repoName: 'my-html-project',
+    displayName: 'FundMyIdea BD',
+    tagline: 'AI-enhanced crowdfunding for student entrepreneurs',
+    description:
+      'Full-stack crowdfunding platform with Node.js/Express/MongoDB. Drag-and-drop campaign page builder, custom reward tiers, WebSocket real-time donation tracking, AI-powered campaign recommendations, analytics dashboard (funding trends, visitor metrics, conversion stats). bKash integration, JWT auth, CSRF protection, dark mode, gamification, responsive design.',
+    tech: ['Node.js', 'Express', 'MongoDB', 'WebSocket', 'EJS', 'JavaScript'],
+    accent: '--accent-magenta',
+    icon: '◎',
+  },
+  {
     repoName: 'Raycaster-OpenGL',
     displayName: 'Raycaster OpenGL',
     tagline: 'GPU-accelerated Wolfenstein-style raycasting engine',
