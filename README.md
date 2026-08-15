@@ -6,19 +6,19 @@
 <div align="center">
 
 <!-- ANIMATED HEADER — same custom palette (cyan / magenta / violet / green) as the live portfolio site -->
-<img src="https://capsule-render.vercel.app/api?type=venom&height=300&color=gradient&customColorList=0,2,2,5,30&text=DaiyaanMuhammadFardeen&fontColor=FFFFFF&fontSize=58&animation=fadeIn&fontAlignY=38&desc=frontend.systems+%2F%2F+web+%26+ML+engineer&descSize=20&descAlignY=64&descFontColor=00e5ff&descAlign=center" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=venom&amp;height=300&amp;color=gradient&amp;customColorList=0,2,2,5,30&amp;text=DaiyaanMuhammadFardeen&amp;fontColor=FFFFFF&amp;fontSize=58&amp;animation=fadeIn&amp;fontAlignY=38&amp;desc=frontend.systems+%2F%2F+web+%26+ML+engineer&amp;descSize=20&amp;descAlignY=64&amp;descFontColor=00e5ff&amp;descAlign=center" width="100%" />
 
 <!-- LIVE TYPING — web-dev themed -->
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=20&pause=900&color=00e5ff&background=00000000&center=true&vCenter=true&multiline=true&repeat=true&width=720&height=110&lines=Full-Stack+Web+Developer+%7C+TypeScript+%2B+Next.js;Java+Spring+Boot+%E2%80%A2+Node+%E2%80%A2+FastAPI+%E2%80%A2+Postgres;I+ship+products+end-to-end+%F0%9F%9A%80;%F0%9F%92%BB+Drink+Water+to+Stay+Hydrated" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&amp;weight=700&amp;size=20&amp;pause=900&amp;color=00e5ff&amp;background=00000000&amp;center=true&amp;vCenter=true&amp;multiline=true&amp;repeat=true&amp;width=720&amp;height=110&amp;lines=Full-Stack+Web+Developer+%7C+TypeScript+%2B+Next.js;Java+Spring+Boot+%E2%80%A2+Node+%E2%80%A2+FastAPI+%E2%80%A2+Postgres;I+ship+products+end-to-end+%F0%9F%9A%80;%F0%9F%92%BB+Drink+Water+to+Stay+Hydrated" alt="Typing SVG" />
 
 <br/>
 
 <!-- TOP-LINE BADGES -->
-[![Profile Views](https://komarev.com/ghpvc/?username=DaiyaanMuhammadFardeen&color=00e5ff&style=for-the-badge&label=PROFILE+VIEWS)](https://github.com/DaiyaanMuhammadFardeen)
-[![GitHub Followers](https://img.shields.io/github/followers/DaiyaanMuhammadFardeen?style=for-the-badge&logo=github&logoColor=white&color=0d0d1f&labelColor=2d333b&label=FOLLOWERS)](https://github.com/DaiyaanMuhammadFardeen?tab=followers)
-[![Repos](https://img.shields.io/badge/REPOS-30%2B-00e5ff?style=for-the-badge&logo=github&logoColor=white&color=0d0d1f&labelColor=2d333b)](https://github.com/DaiyaanMuhammadFardeen?tab=repositories)
-[![Pull Shark](https://img.shields.io/badge/ACHIEVEMENT-Pull%20Shark-ff00aa?style=for-the-badge&labelColor=2d333b)](https://github.com/DaiyaanMuhammadFardeen?tab=achievements)
-[![Open Source](https://img.shields.io/badge/STATUS-Open%20to%20Work-00ff41?style=for-the-badge&labelColor=2d333b)](https://github.com/DaiyaanMuhammadFardeen)
+[![Profile Views](https://komarev.com/ghpvc/?username=DaiyaanMuhammadFardeen&amp;color=00e5ff&amp;style=for-the-badge&amp;label=PROFILE+VIEWS)](https://github.com/DaiyaanMuhammadFardeen)
+[![GitHub Followers](https://img.shields.io/github/followers/DaiyaanMuhammadFardeen?style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;color=0d0d1f&amp;labelColor=2d333b&amp;label=FOLLOWERS)](https://github.com/DaiyaanMuhammadFardeen?tab=followers)
+[![Repos](https://img.shields.io/badge/REPOS-30%2B-00e5ff?style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;color=0d0d1f&amp;labelColor=2d333b)](https://github.com/DaiyaanMuhammadFardeen?tab=repositories)
+[![Pull Shark](https://img.shields.io/badge/ACHIEVEMENT-Pull%20Shark-ff00aa?style=for-the-badge&amp;labelColor=2d333b)](https://github.com/DaiyaanMuhammadFardeen?tab=achievements)
+[![Open Source](https://img.shields.io/badge/STATUS-Open%20to%20Work-00ff41?style=for-the-badge&amp;labelColor=2d333b)](https://github.com/DaiyaanMuhammadFardeen)
 
 </div>
 
@@ -77,7 +77,7 @@ const DaiyaanMuhammadFardeen = {
 
 | 🎬 **Live Site** | 🛠️ **Source Code** | 📐 **Custom Built From** |
 |:---:|:---:|:---:|
-| [![Live](https://img.shields.io/badge/◆_LIVE_DEMO-Visit%20Site-00e5ff?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0d0d1f)](https://daiyaanmuhammadfardeen.github.io/DaiyaanMuhammadFardeen/) | [![Source](https://img.shields.io/badge/◆_SOURCE-Read%20Code-ff00aa?style=for-the-badge&logo=github&logoColor=white&labelColor=0d0d1f)](https://github.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen) | `HTML · CSS · Vanilla JS · Canvas · GSAP` |
+| [![Live](https://img.shields.io/badge/◆_LIVE_DEMO-Visit%20Site-00e5ff?style=for-the-badge&amp;logo=vercel&amp;logoColor=white&amp;labelColor=0d0d1f)](https://daiyaanmuhammadfardeen.github.io/DaiyaanMuhammadFardeen/) | [![Source](https://img.shields.io/badge/◆_SOURCE-Read%20Code-ff00aa?style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;labelColor=0d0d1f)](https://github.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen) | `HTML · CSS · Vanilla JS · Canvas · GSAP` |
 | **No frameworks. No build step.** | **Every pixel is hand-rolled.** | **Zero React, zero Vue, zero bundler.** |
 
 </div>
@@ -109,27 +109,27 @@ const DaiyaanMuhammadFardeen = {
 
 **Frontend & Web**
 
-[![Skills](https://skillicons.dev/icons?i=typescript,javascript,react,nextjs,nodejs,html,css,tailwind&theme=dark)](https://skillicons.dev)
+[![Skills](https://skillicons.dev/icons?i=typescript,javascript,react,nextjs,nodejs,html,css,tailwind&amp;theme=dark)](https://skillicons.dev)
 
 **Backend & APIs**
 
-[![Skills](https://skillicons.dev/icons?i=java,spring,express,python,fastapi&theme=dark)](https://skillicons.dev)
+[![Skills](https://skillicons.dev/icons?i=java,spring,express,python,fastapi&amp;theme=dark)](https://skillicons.dev)
 
 **Data & Infra**
 
-[![Skills](https://skillicons.dev/icons?i=postgres,mongodb,redis,docker,nginx,githubactions,vercel&theme=dark)](https://skillicons.dev)
+[![Skills](https://skillicons.dev/icons?i=postgres,mongodb,redis,docker,nginx,githubactions,vercel&amp;theme=dark)](https://skillicons.dev)
 
 **AI / ML**
 
-[![Skills](https://skillicons.dev/icons?i=pytorch,tensorflow,huggingface&theme=dark)](https://skillicons.dev)
+[![Skills](https://skillicons.dev/icons?i=pytorch,tensorflow,huggingface&amp;theme=dark)](https://skillicons.dev)
 
 **Tools & Environment**
 
-[![Skills](https://skillicons.dev/icons?i=git,github,vscode,neovim,arch,linux&theme=dark)](https://skillicons.dev)
+[![Skills](https://skillicons.dev/icons?i=git,github,vscode,neovim,arch,linux&amp;theme=dark)](https://skillicons.dev)
 
 **Systems & Graphics (history / side projects)**
 
-[![Skills](https://skillicons.dev/icons?i=cpp,c,opengl,cmake,bash&theme=dark)](https://skillicons.dev)
+[![Skills](https://skillicons.dev/icons?i=cpp,c,opengl,cmake,bash&amp;theme=dark)](https://skillicons.dev)
 
 </div>
 
@@ -308,22 +308,22 @@ C++/OpenGL 3.3 raycaster with DDA raycasting in GLSL fragment shaders. Textured 
 
 <div align="center">
 
-<img src="https://github-profile-trophy.vercel.app/?username=DaiyaanMuhammadFardeen&theme=tokyonight&no-frame=true&margin-w=8&margin-h=8&row=1&column=7" />
+<img src="https://github-profile-trophy.vercel.app/?username=DaiyaanMuhammadFardeen&amp;theme=tokyonight&amp;no-frame=true&amp;margin-w=8&amp;margin-h=8&amp;row=1&amp;column=7" />
 
 </div>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=DaiyaanMuhammadFardeen&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&include_all_commits=true&rank_icon=github&bg_color=0d0d1f00&title_color=00e5ff&icon_color=ff00aa&text_color=e8e8f8" alt="GitHub Stats" />
+  <img src="https://github-readme-stats.vercel.app/api?username=DaiyaanMuhammadFardeen&amp;show_icons=true&amp;theme=tokyonight&amp;hide_border=true&amp;count_private=true&amp;include_all_commits=true&amp;rank_icon=github&amp;bg_color=0d0d1f00&amp;title_color=00e5ff&amp;icon_color=ff00aa&amp;text_color=e8e8f8" alt="GitHub Stats" />
   &nbsp;
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=DaiyaanMuhammadFardeen&layout=compact&theme=tokyonight&hide_border=true&count_private=true&langs_count=10&bg_color=0d0d1f00&title_color=00e5ff&text_color=e8e8f8" alt="Top Languages" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=DaiyaanMuhammadFardeen&amp;layout=compact&amp;theme=tokyonight&amp;hide_border=true&amp;count_private=true&amp;langs_count=10&amp;bg_color=0d0d1f00&amp;title_color=00e5ff&amp;text_color=e8e8f8" alt="Top Languages" />
 </p>
 
 <p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=DaiyaanMuhammadFardeen&theme=tokyonight&hide_border=true&background=0d0d1f00&ring=00e5ff&fire=ff00aa&currStreakLabel=00e5ff&sideLabels=e8e8f8&dates=7878a8" alt="Streak Stats" />
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=DaiyaanMuhammadFardeen&amp;theme=tokyonight&amp;hide_border=true&amp;background=0d0d1f00&amp;ring=00e5ff&amp;fire=ff00aa&amp;currStreakLabel=00e5ff&amp;sideLabels=e8e8f8&amp;dates=7878a8" alt="Streak Stats" />
 </p>
 
 <p align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=DaiyaanMuhammadFardeen&theme=tokyo-night&hide_border=true&area=true&area_color=00e5ff&line=00e5ff&point=ff00aa&radius=8" width="100%" alt="Activity Graph" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=DaiyaanMuhammadFardeen&amp;theme=tokyo-night&amp;hide_border=true&amp;area=true&amp;area_color=00e5ff&amp;line=00e5ff&amp;point=ff00aa&amp;radius=8" width="100%" alt="Activity Graph" />
 </p>
 
 ---
@@ -339,7 +339,7 @@ C++/OpenGL 3.3 raycaster with DDA raycasting in GLSL fragment shaders. Textured 
 ## 💬 Random dev wisdom
 
 <p align="center">
-  <img src="https://quotes-readme.vercel.app/api?type=horizontal&theme=dark" alt="Quote" />
+  <img src="https://quotes-readme.vercel.app/api?type=horizontal&amp;theme=dark" alt="Quote" />
 </p>
 
 ---
@@ -348,9 +348,9 @@ C++/OpenGL 3.3 raycaster with DDA raycasting in GLSL fragment shaders. Textured 
 
 <div align="center">
 
-[![GitHub](https://img.shields.io/badge/GitHub-DaiyaanMuhammadFardeen-00e5ff?style=for-the-badge&logo=github&logoColor=white&labelColor=0d0d1f)](https://github.com/DaiyaanMuhammadFardeen)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Live%20Site-ff00aa?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0d0d1f)](https://daiyaanmuhammadfardeen.github.io/DaiyaanMuhammadFardeen/)
-[![Repo](https://img.shields.io/badge/Source-This%20Repo-00ff41?style=for-the-badge&logo=github&logoColor=white&labelColor=0d0d1f)](https://github.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen)
+[![GitHub](https://img.shields.io/badge/GitHub-DaiyaanMuhammadFardeen-00e5ff?style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;labelColor=0d0d1f)](https://github.com/DaiyaanMuhammadFardeen)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Live%20Site-ff00aa?style=for-the-badge&amp;logo=vercel&amp;logoColor=white&amp;labelColor=0d0d1f)](https://daiyaanmuhammadfardeen.github.io/DaiyaanMuhammadFardeen/)
+[![Repo](https://img.shields.io/badge/Source-This%20Repo-00ff41?style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;labelColor=0d0d1f)](https://github.com/DaiyaanMuhammadFardeen/DaiyaanMuhammadFardeen)
 
 <br/>
 
@@ -359,6 +359,6 @@ C++/OpenGL 3.3 raycaster with DDA raycasting in GLSL fragment shaders. Textured 
 <br/>
 
 <!-- ANIMATED FOOTER -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,2,2,5,30&height=110&section=footer&animation=fadeIn" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&amp;color=gradient&amp;customColorList=0,2,2,5,30&amp;height=110&amp;section=footer&amp;animation=fadeIn" width="100%" />
 
 </div>
