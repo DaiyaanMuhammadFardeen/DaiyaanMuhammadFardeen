@@ -39,10 +39,10 @@ const DaiyaanMuhammadFardeen = {
     "Domio — Figma/Canva-grade presentation platform (Next.js + Go + Hono)",
     "KhojAI — full-stack AI search w/ Spring Boot + FastAPI + Next.js + Flutter",
     "CV-Tailor — FastAPI + Next.js 16 ATS engine with Ollama + pgvector",
-    "FundMyIdea BD — Node/Express/MongoDB crowdfunding platform",
+    "FundMyIdea BD — Node/Express/MongoDB crowdfunding platform (my-html-project)",
   ],
 
-  // Languages & frameworks (current focus)
+  // Languages &amp; frameworks (current focus)
   stack: {
     languages : ["TypeScript", "JavaScript", "Python", "Java", "C++"],
     frontend  : ["Next.js", "React", "Tailwind", "EJS", "WebSocket"],
@@ -107,15 +107,15 @@ const DaiyaanMuhammadFardeen = {
 
 <div align="center">
 
-**Frontend & Web**
+**Frontend &amp; Web**
 
 [![Skills](https://skillicons.dev/icons?i=typescript,javascript,react,nextjs,nodejs,html,css,tailwind&amp;theme=dark)](https://skillicons.dev)
 
-**Backend & APIs**
+**Backend &amp; APIs**
 
 [![Skills](https://skillicons.dev/icons?i=java,spring,express,python,fastapi&amp;theme=dark)](https://skillicons.dev)
 
-**Data & Infra**
+**Data &amp; Infra**
 
 [![Skills](https://skillicons.dev/icons?i=postgres,mongodb,redis,docker,nginx,githubactions,vercel&amp;theme=dark)](https://skillicons.dev)
 
@@ -123,11 +123,11 @@ const DaiyaanMuhammadFardeen = {
 
 [![Skills](https://skillicons.dev/icons?i=pytorch,tensorflow,huggingface&amp;theme=dark)](https://skillicons.dev)
 
-**Tools & Environment**
+**Tools &amp; Environment**
 
 [![Skills](https://skillicons.dev/icons?i=git,github,vscode,neovim,arch,linux&amp;theme=dark)](https://skillicons.dev)
 
-**Systems & Graphics (history / side projects)**
+**Systems &amp; Graphics (history / side projects)**
 
 [![Skills](https://skillicons.dev/icons?i=cpp,c,opengl,cmake,bash&amp;theme=dark)](https://skillicons.dev)
 
@@ -189,7 +189,7 @@ Paste JD + upload CV, get a semantically tailored version optimized for ATS syst
   <tr>
     <td valign="top">
 
-**💸 [FundMyIdea BD](https://github.com/DaiyaanMuhammadFardeen/fundmyidea-bd)** — *Crowdfunding for student entrepreneurs*
+**💸 [FundMyIdea BD](https://github.com/DaiyaanMuhammadFardeen/my-html-project)** — *Crowdfunding for student entrepreneurs*
 
 Full-stack crowdfunding platform with **Node.js + Express + MongoDB**. Drag-and-drop campaign builder, custom reward tiers, **WebSocket** real-time donation tracking, AI-powered campaign recommendations, analytics dashboard (funding trends, visitor metrics, conversion stats). bKash integration, JWT auth, CSRF protection, dark mode, gamification, responsive design.
 
@@ -204,7 +204,7 @@ Full-stack crowdfunding platform with **Node.js + Express + MongoDB**. Drag-and-
 
 <br/>
 
-### 🛠 Side projects & utilities
+### 🛠 Side projects &amp; utilities
 
 <table>
   <tr>
