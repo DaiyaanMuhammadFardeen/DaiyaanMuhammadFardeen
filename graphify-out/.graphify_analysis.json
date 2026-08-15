@@ -1,0 +1,321 @@
+{
+  "communities": {
+    "0": [
+      "canvas_cursor_trail",
+      "canvas_cursor_trail_colors",
+      "canvas_cursor_trail_createtrailparticle",
+      "canvas_cursor_trail_hextorgba",
+      "canvas_cursor_trail_initcursortrail",
+      "canvas_cursor_trail_parsecssvar",
+      "loading",
+      "loading_bootlines",
+      "loading_initloading",
+      "main",
+      "main_boot",
+      "main_lazyobserver",
+      "main_motionquery",
+      "main_prefetchgithub",
+      "main_section_init",
+      "main_updatemouse",
+      "main_updatescroll",
+      "sections_skills",
+      "sections_skills_initskills",
+      "terminal_dock_initterminaldock",
+      "theme",
+      "theme_getcurrenttheme",
+      "theme_inittheme",
+      "theme_toggletheme"
+    ],
+    "1": [
+      "canvas_hero_particles",
+      "canvas_hero_particles_calcimagelayout",
+      "canvas_hero_particles_colors",
+      "canvas_hero_particles_createimageparticle",
+      "canvas_hero_particles_createtextparticle",
+      "canvas_hero_particles_getregions",
+      "canvas_hero_particles_hextorgba",
+      "canvas_hero_particles_initheroparticles",
+      "canvas_hero_particles_loadimage",
+      "canvas_hero_particles_randombetween",
+      "canvas_hero_particles_sampleimagepixels",
+      "canvas_hero_particles_sampletextlines",
+      "canvas_hero_particles_text_lines",
+      "sections_hero",
+      "sections_hero_animatecta",
+      "sections_hero_animatesubtitle",
+      "sections_hero_attachclickhandlers",
+      "sections_hero_attachparallax",
+      "sections_hero_inithero"
+    ],
+    "2": [
+      "markdown_loader",
+      "markdown_loader_animatein",
+      "markdown_loader_animateout",
+      "markdown_loader_clearhighlights",
+      "markdown_loader_closeviewer",
+      "markdown_loader_createmodal",
+      "markdown_loader_embedded",
+      "markdown_loader_escapehtml",
+      "markdown_loader_fetchmarkdown",
+      "markdown_loader_getreducedmotion",
+      "markdown_loader_highlighttext",
+      "markdown_loader_injectstyles",
+      "markdown_loader_markdown_cache",
+      "markdown_loader_openmarkdownviewer",
+      "markdown_loader_parsemarkdowntotokens",
+      "markdown_loader_rendertokens",
+      "markdown_loader_setupfocustrap",
+      "markdown_loader_setupinputhandler",
+      "markdown_loader_showhelp"
+    ],
+    "3": [
+      "utils_typewriter",
+      "utils_typewriter_default_options",
+      "utils_typewriter_typewriter_appendtext",
+      "utils_typewriter_typewriter_chain",
+      "utils_typewriter_typewriter_clear",
+      "utils_typewriter_typewriter_constructor",
+      "utils_typewriter_typewriter_delete",
+      "utils_typewriter_typewriter_deletechars",
+      "utils_typewriter_typewriter_destroy",
+      "utils_typewriter_typewriter_hidecursor",
+      "utils_typewriter_typewriter_initcursor",
+      "utils_typewriter_typewriter_injectblinkstyle",
+      "utils_typewriter_typewriter_injectthinkingpauses",
+      "utils_typewriter_typewriter_pause",
+      "utils_typewriter_typewriter_showcursor",
+      "utils_typewriter_typewriter_start",
+      "utils_typewriter_typewriter_syncdom",
+      "utils_typewriter_typewriter_tokenize",
+      "utils_typewriter_typewriter_type"
+    ],
+    "4": [
+      "canvas_neural_bg",
+      "canvas_neural_bg_cleargradientcache",
+      "canvas_neural_bg_colors",
+      "canvas_neural_bg_config",
+      "canvas_neural_bg_createnode",
+      "canvas_neural_bg_getgradient",
+      "canvas_neural_bg_gradientcache",
+      "canvas_neural_bg_hextorgba",
+      "canvas_neural_bg_initneuralbg",
+      "canvas_neural_bg_parsecssvar",
+      "canvas_neural_bg_spatialhash",
+      "canvas_neural_bg_spatialhash_clear",
+      "canvas_neural_bg_spatialhash_constructor",
+      "canvas_neural_bg_spatialhash_getnearby",
+      "canvas_neural_bg_spatialhash_insert",
+      "canvas_neural_bg_spatialhash_key"
+    ],
+    "5": [
+      "sections_projects",
+      "sections_projects_accenttoglow",
+      "sections_projects_accenttovar",
+      "sections_projects_buildcard",
+      "sections_projects_featured",
+      "sections_projects_fetchrepos",
+      "sections_projects_getaccentcolor",
+      "sections_projects_getglowvalue",
+      "sections_projects_initprojects",
+      "sections_projects_langcolors",
+      "sections_projects_mergeapidata",
+      "sections_projects_observereveal",
+      "sections_projects_timeago",
+      "utils_tilt",
+      "utils_tilt_maketiltable"
+    ],
+    "6": [
+      "sections_about",
+      "sections_about_about_commands",
+      "sections_about_buildfactpanel",
+      "sections_about_fact_cards",
+      "sections_about_initabout",
+      "sections_about_maketerminalinteractive",
+      "sections_about_renderterminalinstant",
+      "sections_about_startterminalautotype",
+      "sections_about_terminal_lines"
+    ],
+    "7": [
+      "sections_contact",
+      "sections_contact_buildformhtml",
+      "sections_contact_createfield",
+      "sections_contact_gettransmissionlines",
+      "sections_contact_handlesubmit",
+      "sections_contact_initcontact",
+      "utils_magnetic",
+      "utils_magnetic_makemagnetic"
+    ],
+    "8": [
+      "terminal_dock",
+      "terminal_dock_fetchquote",
+      "terminal_dock_handlecommand",
+      "terminal_dock_scrolltosection",
+      "terminal_dock_sections",
+      "terminal_dock_smoothscrollto",
+      "terminal_dock_startmatrixrain",
+      "terminal_dock_togglematrixoverlay"
+    ],
+    "9": [
+      "sections_timeline",
+      "sections_timeline_accentcolors",
+      "sections_timeline_buildevent",
+      "sections_timeline_drawconnectionlines",
+      "sections_timeline_events",
+      "sections_timeline_inittimeline",
+      "sections_timeline_updatetimelineline"
+    ],
+    "10": [
+      "md_docs_auto_git_handler_hub",
+      "md_docs_cv_tailor",
+      "md_docs_khojai",
+      "md_docs_mini_transformer_from_scratch",
+      "md_docs_vibecost"
+    ],
+    "11": [
+      "utils_glitch",
+      "utils_glitch_colors",
+      "utils_glitch_glitchtext"
+    ],
+    "12": [
+      "index_html_daiyaanmuhammadfardeen",
+      "readme_daiyaanmuhammad"
+    ],
+    "13": [
+      "md_docs_nyon",
+      "md_docs_raycaster_opengl"
+    ],
+    "14": [
+      "md_docs_my_html_project"
+    ]
+  },
+  "cohesion": {
+    "0": 0.11956521739130435,
+    "1": 0.14619883040935672,
+    "2": 0.1695906432748538,
+    "3": 0.18128654970760233,
+    "4": 0.15833333333333333,
+    "5": 0.21904761904761905,
+    "6": 0.2777777777777778,
+    "7": 0.42857142857142855,
+    "8": 0.42857142857142855,
+    "9": 0.3333333333333333,
+    "10": 0.4,
+    "11": 0.6666666666666666,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0
+  },
+  "gods": [
+    {
+      "id": "markdown_loader_openmarkdownviewer",
+      "label": "openMarkdownViewer()",
+      "degree": 9
+    },
+    {
+      "id": "main_boot",
+      "label": "boot()",
+      "degree": 8
+    },
+    {
+      "id": "canvas_neural_bg_spatialhash",
+      "label": "SpatialHash",
+      "degree": 6
+    },
+    {
+      "id": "sections_hero_inithero",
+      "label": "initHero()",
+      "degree": 6
+    },
+    {
+      "id": "sections_projects_buildcard",
+      "label": "buildCard()",
+      "degree": 6
+    },
+    {
+      "id": "sections_projects_initprojects",
+      "label": "initProjects()",
+      "degree": 6
+    },
+    {
+      "id": "utils_magnetic_makemagnetic",
+      "label": "makeMagnetic()",
+      "degree": 5
+    },
+    {
+      "id": "canvas_hero_particles_initheroparticles",
+      "label": "initHeroParticles()",
+      "degree": 4
+    },
+    {
+      "id": "canvas_neural_bg_initneuralbg",
+      "label": "initNeuralBg()",
+      "degree": 4
+    },
+    {
+      "id": "sections_about_initabout",
+      "label": "initAbout()",
+      "degree": 4
+    }
+  ],
+  "surprises": [
+    {
+      "source": "boot()",
+      "target": "initNeuralBg()",
+      "source_files": [
+        "main.js",
+        "canvas/neural-bg.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "boot()",
+      "target": "initHero()",
+      "source_files": [
+        "main.js",
+        "sections/hero.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "boot()",
+      "target": "initCursorTrail()",
+      "source_files": [
+        "main.js",
+        "canvas/cursor-trail.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "initHero()",
+      "target": "initHeroParticles()",
+      "source_files": [
+        "sections/hero.js",
+        "canvas/hero-particles.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "boot()",
+      "target": "initLoading()",
+      "source_files": [
+        "main.js",
+        "loading.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    }
+  ],
+  "tokens": {
+    "input": 50558,
+    "output": 1036
+  }
+}

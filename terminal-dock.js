@@ -42,7 +42,7 @@ function smoothScrollTo(targetY, duration = 800) {
 const HELP = `
 Available commands:
   goto [section]   — scroll to section (home, about, skills, projects, timeline, contact)
-  cat [file]       — display file contents (skills.txt, profile.txt, bio.txt)
+  cat [file]       — display file contents (skills.txt, profile.txt, bio.txt, stack.txt, projects.txt)
   sudo [cmd]       — run command with elevated privileges (try: sudo make coffee)
   ping [host]      — ping a host (try: ping github.com)
   theme [name]     — switch theme (neon, matrix, void)
@@ -59,7 +59,7 @@ Available commands:
                    — shortcut: scroll to section
 `;
 
-const WHOAMI = `daiyaan\nrole: AI Engineer & Systems Programmer\nshell: zsh 5.9\nuptime: see uptime command`;
+const WHOAMI = `daiyaan\nrole: Full-Stack Web Developer · ML Engineer\nshell: zsh 5.9\nuptime: see uptime command`;
 
 export function initTerminalDock() {
   const dock = document.getElementById('terminal-dock');
@@ -73,7 +73,7 @@ export function initTerminalDock() {
 
   const prompt = document.createElement('span');
   prompt.className = 'terminal-dock__prompt';
-  prompt.textContent = 'daiyaan@neural-os:~$';
+  prompt.textContent = 'daiyaan@web-os:~$';
 
   const input = document.createElement('input');
   input.className = 'terminal-dock__input';
@@ -206,11 +206,11 @@ function handleCommand(cmd, output, startTime) {
     case 'cat': {
       const file = args[1]?.toLowerCase();
       const files = {
-        'skills.txt': `Languages:  Rust, C++, Python, Go, TypeScript, PHP, SQL\nAI/ML:       PyTorch, Transformers, vLLM, ROCm, Embeddings\nSystems:     OpenGL, ECS, GPU Compute, Linux\nBackend:     FastAPI, PostgreSQL, Redis, Docker`,
-        'profile.txt': `Name:    Daiyaan Muhammad Fardeen\nRole:    AI Engineer & Systems Programmer\nFocus:   AI infrastructure, GPU compute, neural architectures\nStatus:  Final year thesis — Commit Message Transformer`,
-        'bio.txt': `Daiyaan is a final-year CS student at IUT, building AI systems that \nspan the stack — from GPU-optimized ML models to full-stack web \napps. His thesis explores compact Transformer architectures for \ncommit message generation, trained on AMD ROCm hardware.`,
-        'stack.txt': `Languages:     Rust, C++, Python, Go, TypeScript, PHP, SQL\nFrameworks:    PyTorch, FastAPI, OpenGL, ECS\nInfra:         vLLM, Ollama, Celery, PostgreSQL, Redis, Docker\nTools:         ROCm, Neovim, Linux, Git, GitHub Actions`,
-        'thesis.txt': `Commit Message Transformer\n\nA compact Transformer trained from scratch in PyTorch.\nArchitecture: RoPE, RMSNorm, SwiGLU, DiffEmbedding\ndual BPE vocabs × 2 embedding tables, 10 × 10^6 tokens.\nTraining on ROCm (AMD RX 6600).\nGoal: generate structured commit messages from diffs.`,
+        'skills.txt': `Languages:  TypeScript, JavaScript, Python, Java, C++, Go\nFrontend:   Next.js, React, Tailwind, EJS, HTML/CSS\nBackend:    Node.js, Express, FastAPI, Spring Boot, Hono\nData:       PostgreSQL, MongoDB, Redis, ClickHouse, NATS\nDevOps:     Docker, GitHub Actions, Vercel, Nginx\nRealtime:   WebSocket, SSE, Socket.io`,
+        'profile.txt': `Name:    Daiyaan Muhammad Fardeen\nRole:    Full-Stack Web Developer · ML Engineer\nFocus:   Production-grade web apps, end-to-end.\nStack:   TypeScript, Next.js, React, Node.js, FastAPI, Spring Boot\nStatus:  Open to web-dev roles (frontend / backend / full-stack)`,
+        'bio.txt': `Daiyaan is a full-stack web developer and ML engineer from Dhaka.\nHe ships production web apps — Next.js/React frontends, Node.js &\nFastAPI backends, Spring Boot services, PostgreSQL/MongoDB stores.\nSide projects: C++/OpenGL game engines, a 36M-param Transformer\ntrained from scratch for commit message generation, and the AI\nsearch platform KhojAI.`,
+        'stack.txt': `Languages:     TypeScript, JavaScript, Python, Java, C++, Go, Bash\nFrontend:      Next.js, React, Tailwind, EJS, HTML/CSS\nBackend:       Node.js, Express, FastAPI, Spring Boot, Hono\nData:          PostgreSQL, MongoDB, Redis, ClickHouse, NATS, pgvector\nRealtime:      WebSocket, SSE, Socket.io\nInfra:         Docker, GitHub Actions, Vercel, Nginx, Linux\nAI/ML:         PyTorch, HuggingFace, Ollama, LangChain`,
+        'projects.txt': `Domio         | Figma/Canva-grade presentation platform (Next.js, Go, TS, React)\nKhojAI        | AI search + chat (Spring Boot, FastAPI, Next.js, Flutter)\nCV-Tailor     | AI CV tailoring (FastAPI, Next.js, Ollama, pgvector)\nFundMyIdea BD | Crowdfunding for students (Node.js, Express, MongoDB, WebSocket)\nvibecost      | LLM cost simulator (Python, CLI, Tiktoken)\nMini-Transf.  | 36M-param Transformer from scratch (PyTorch, thesis)\nWeven (WAVE)  | Universal E2E web tester (Go, TypeScript)\nAuto-Git-Hub  | TUI Git management (Bash, Python, Dialog)`,
       };
       if (file && files[file]) {
         writeOutput(files[file]);

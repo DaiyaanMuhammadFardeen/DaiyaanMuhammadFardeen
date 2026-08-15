@@ -1,5 +1,5 @@
 /* ============================================================
-   NEURAL TERMINAL — Design System
+   FRONTEND.SYSTEMS — Design System
    Daiyaan Muhammad Fardeen Portfolio
    ============================================================ */
 
@@ -19,6 +19,8 @@
   --accent-magenta: #ff00aa;
   --accent-green: #00ff41;
   --accent-amber: #ffb300;
+  --accent-blue: #5b8cff;        /* web-dev blue */
+  --accent-purple: #a16cff;      /* AI accent */
 
   /* Text */
   --text-primary: #e8e8f8;
@@ -30,6 +32,9 @@
   --glow-cyan: 0 0 8px #00e5ff, 0 0 20px #00e5ff44, 0 0 40px #00e5ff22;
   --glow-magenta: 0 0 8px #ff00aa, 0 0 20px #ff00aa44, 0 0 40px #ff00aa22;
   --glow-green: 0 0 8px #00ff41, 0 0 20px #00ff4144, 0 0 40px #00ff4122;
+  --glow-amber: 0 0 8px #ffb300, 0 0 20px #ffb30044, 0 0 40px #ffb30022;
+  --glow-blue: 0 0 8px #5b8cff, 0 0 20px #5b8cff44, 0 0 40px #5b8cff22;
+  --glow-purple: 0 0 8px #a16cff, 0 0 20px #a16cff44, 0 0 40px #a16cff22;
 
   /* Borders */
   --border-subtle: 1px solid #ffffff08;
@@ -524,6 +529,22 @@ a:hover {
   text-transform: uppercase;
   color: var(--accent-cyan);
   margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-magenta) 50%, var(--accent-blue) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   opacity: 0;
   transform: translateY(10px);
 }

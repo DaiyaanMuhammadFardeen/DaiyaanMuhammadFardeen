@@ -1,16 +1,17 @@
 /**
- * loading.js — Boot sequence for Neural Terminal loading screen.
+ * loading.js — Boot sequence for Frontend.Systems loading screen.
  * Shows a kernel-style boot log (matching spec), then reveals the portfolio
  * with a split wipe. The final [OK] lines blink once before the wipe.
  */
 
 /* ── Boot sequence (spec) ── */
 const bootLines = [
-  { text: '[BOOT] neural-terminal v2.4.1 — initializing neural interface...', class: '' },
+  { text: '[BOOT] frontend.systems v3.0.0 — initializing web stack...', class: '' },
   { text: '[ OK ] Memory controller: 0x0000-0xFFFF mapped', class: 'boot-ok' },
-  { text: '[ OK ] /neural-core mounted on cyberspace', class: 'boot-ok' },
-  { text: '[ OK ] neural-network driver v3.0.7 loaded', class: 'boot-ok' },
-  { text: '[ OK ] GPU compute context established (ROCm 6.2)', class: 'boot-ok' },
+  { text: '[ OK ] /web-core mounted on cyberspace', class: 'boot-ok' },
+  { text: '[ OK ] react/next runtime v15.2 loaded', class: 'boot-ok' },
+  { text: '[ OK ] postgres-16 + redis-7 connection pool established', class: 'boot-ok' },
+  { text: '[ OK ] node-22 worker threads armed (4 cores online)', class: 'boot-ok' },
   { text: '[WARN] Matrix overlay: signal unstable — deploying static fallback', class: 'boot-progress' },
   { text: '[ OK ] Cursor-trail subsystem armed', class: 'boot-ok' },
   { text: '[ OK ] Particle constellation home position locked', class: 'boot-ok' },
@@ -18,7 +19,7 @@ const bootLines = [
   { text: '[ OK ] Consciousness located — signal 98%', class: 'boot-ok' },
   { text: '', class: '' },
   { text: '╔═══════════════════════════════════════════╗', class: '' },
-  { text: '║  neural-terminal ready — entering subspace  ║', class: '' },
+  { text: '║  frontend.systems ready — entering stack  ║', class: '' },
   { text: '╚═══════════════════════════════════════════╝', class: '' },
   { text: '', class: '' },
   { text: '[ OK ] system ready. type help for commands.', class: 'boot-ok' },

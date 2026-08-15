@@ -19,9 +19,9 @@
 
 // ---- Text lines ----
 const TEXT_LINES = [
-  { text: 'BUILDING', color: 'cyan',    fontSize: 160 },
-  { text: 'THINKING', color: 'magenta', fontSize: 160 },
-  { text: 'VIBING',   color: 'green',   fontSize: 160 },
+  { text: 'SHIPPING', color: 'cyan',    fontSize: 160 },
+  { text: 'FULLSTACK', color: 'magenta', fontSize: 160 },
+  { text: 'NEXTJS',    color: 'green',   fontSize: 160 },
 ];
 
 // ---- Sampling ----

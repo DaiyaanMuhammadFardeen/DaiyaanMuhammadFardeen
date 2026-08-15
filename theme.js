@@ -1,9 +1,9 @@
 /**
  * theme.js — System dark/light mode detection and dynamic switching
- * Neural Terminal Portfolio
+ * Frontend.Systems Portfolio
  */
 
-const STORAGE_KEY = 'neural-terminal-theme';
+const STORAGE_KEY = 'frontend-systems-theme';
 
 export function initTheme() {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -25,7 +25,7 @@ export function initTheme() {
   // Listen for system changes
   mediaQuery.addEventListener('change', (e) => {
     // Only auto-switch if user hasn't set a manual override
-    if (!localStorage.getItem('neural-terminal-theme-override')) {
+    if (!localStorage.getItem('frontend-systems-theme-override')) {
       applyTheme(e.matches);
     }
   });
@@ -36,7 +36,7 @@ export function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem(STORAGE_KEY, next);
-  localStorage.setItem('neural-terminal-theme-override', 'true');
+  localStorage.setItem('frontend-systems-theme-override', 'true');
   return next;
 }
 

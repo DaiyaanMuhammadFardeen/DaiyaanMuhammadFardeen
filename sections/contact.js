@@ -101,7 +101,25 @@ function buildFormHTML() {
   emailLink.dataset.cursorLabel = 'SEND';
   makeMagnetic(emailLink, { strength: 0.25 });
 
-  social.append(githubLink, emailLink);
+  const portfolioLink = document.createElement('a');
+  portfolioLink.className = 'contact-social__link';
+  portfolioLink.href = 'https://daiyaanmuhammadfardeen.github.io/DaiyaanMuhammadFardeen/';
+  portfolioLink.target = '_blank';
+  portfolioLink.rel = 'noopener noreferrer';
+  portfolioLink.textContent = '[portfolio]';
+  portfolioLink.dataset.cursorLabel = 'OPEN';
+  makeMagnetic(portfolioLink, { strength: 0.25 });
+
+  const domioLink = document.createElement('a');
+  domioLink.className = 'contact-social__link';
+  domioLink.href = 'https://github.com/DaiyaanMuhammadFardeen/Domio';
+  domioLink.target = '_blank';
+  domioLink.rel = 'noopener noreferrer';
+  domioLink.textContent = '[domio]';
+  domioLink.dataset.cursorLabel = 'READ';
+  makeMagnetic(domioLink, { strength: 0.25 });
+
+  social.append(githubLink, emailLink, portfolioLink, domioLink);
 
   /* Assemble */
   frag.append(antenna, signal, form, logContainer, social);

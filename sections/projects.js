@@ -7,21 +7,61 @@ import { makeTiltable } from '../utils/tilt.js';
 /* ── Featured projects (manually curated, merged with GitHub API) ── */
 const featured = [
   {
-    repoName: 'CV-Tailor',
-    displayName: 'CVTailor',
-    tagline: 'Local-first AI that rewrites your CV to fit any job',
+    repoName: 'Domio',
+    displayName: 'Domio',
+    tagline: 'Figma/Canva-grade presentation platform — local-first, real-time, AI-assisted',
     description:
-      'FastAPI backend for AI-assisted CV tailoring. Uses Llama 3.1 via Ollama, NuExtract for CV normalization, pgvector similarity search with 14,000+ skill embeddings, Celery async job queue with SSE streaming. Multi-agent pipeline: JD parsing, skill resolution, bullet improvement, composite scoring (ATS, semantic, structural, readability), transparent diff generation. Full Next.js 16 dashboard with JWT auth, Docker Compose deployment.',
-    tech: ['Python', 'FastAPI', 'PyTorch', 'Ollama', 'PostgreSQL', 'Redis', 'Celery', 'Docker'],
+      'Polyglot full-stack deck platform with deck-as-code authoring + WYSIWYG editor. Control plane in TypeScript + Hono + Node 22, realtime gateway in Go, CPU workers in Go/Rust, AI workers in Python. Frontend: Next.js 15 (App Router) + React 19 + Vite. Storage: PostgreSQL 16 + ClickHouse + Redis 7 + NATS JetStream + S3-compatible. Programmable agents via MCP. Phase 17 / 18 in flight.',
+    tech: ['Next.js 15', 'React 19', 'TypeScript', 'Hono', 'Node.js 22', 'Go', 'Rust', 'PostgreSQL 16', 'ClickHouse', 'Redis 7', 'NATS', 'Docker'],
     accent: '--accent-cyan',
+    icon: '◆',
+  },
+  {
+    repoName: 'KhojAI',
+    displayName: 'KhojAI',
+    tagline: 'Full-stack AI search + chat with RAG — web + mobile',
+    description:
+      'Multi-service AI platform. Java Spring Boot backend, Python FastAPI AI engine, Next.js web frontend, Flutter mobile app. Hybrid retrieval (spaCy NER, KeyBERT, YAKE, BM25, WordNet, Google Programmable Search). Async web scraping (3 strategies). SSE streaming with 9 event types for live pipeline visualization. JWT auth, PostgreSQL, circuit breakers, disk caching.',
+    tech: ['Java', 'Spring Boot', 'Python', 'FastAPI', 'Next.js', 'Flutter', 'PostgreSQL', 'Redis', 'Ollama', 'SSE'],
+    accent: '--accent-magenta',
     icon: '◈',
   },
   {
-    repoName: 'vibecost',
-    displayName: 'VibeCost',
-    tagline: 'Prompt-based token estimation & LLM cost simulator',
+    repoName: 'CV-Tailor',
+    displayName: 'CV-Tailor',
+    tagline: 'AI-powered CV tailoring — every change transparent and reversible',
     description:
-      'CLI tool that simulates AI agent behavior to predict token usage and costs before any API call. Prompt Prediction Engine estimates files/tools an AI would use from a natural language task. Supports 15 models across OpenAI, Anthropic, Google, DeepSeek, Meta. Uses Tiktoken + HF AutoTokenizer. Features reasoning token sim, prompt caching, context pressure bars, multi-turn agent loops, CI/CD enforcement, JSON reporting.',
+      'FastAPI core + Next.js 16 dashboard. Llama 3.1 via Ollama, NuExtract for CV normalization, pgvector similarity search over 14,000+ skill embeddings. Celery async job queue with SSE streaming. Multi-agent pipeline: JD parsing, skill resolution, bullet improvement, composite scoring (ATS, semantic, structural, readability), transparent diff generation. Docker Compose one-command deploy.',
+    tech: ['Python', 'FastAPI', 'PyTorch', 'Ollama', 'PostgreSQL', 'pgvector', 'Redis', 'Celery', 'Next.js', 'Docker'],
+    accent: '--accent-green',
+    icon: '◉',
+  },
+  {
+    repoName: 'my-html-project',
+    displayName: 'FundMyIdea BD',
+    tagline: 'Crowdfunding platform for student entrepreneurs — MFS-first',
+    description:
+      'Full-stack platform with Node.js + Express + MongoDB. Drag-and-drop campaign page builder, custom reward tiers, WebSocket real-time donation tracking, AI-powered campaign recommendations, analytics dashboard (funding trends, visitor metrics, conversion stats). bKash/Nagad integration, JWT auth, CSRF protection, dark mode, gamification, responsive design.',
+    tech: ['Node.js', 'Express', 'MongoDB', 'WebSocket', 'EJS', 'JavaScript', 'JWT', 'Docker'],
+    accent: '--accent-amber',
+    icon: '◎',
+  },
+  {
+    repoName: 'Web-Application-Validation-Engine',
+    displayName: 'Weven (WAVE)',
+    tagline: 'Universal end-to-end tester for web apps — Go runtime + markdown specs',
+    description:
+      'Black-box web-app validation framework. Specs written in a markdown-style domain-specific language, executed by a Go-built test runner. Async, parallel, rich diff reporting. Designed for CI/CD pipelines — run against any live deployment, get actionable pass/fail per scenario.',
+    tech: ['Go', 'TypeScript', 'Markdown', 'E2E', 'CI/CD'],
+    accent: '--accent-cyan',
+    icon: '⬢',
+  },
+  {
+    repoName: 'vibecost',
+    displayName: 'vibecost',
+    tagline: 'Prompt-based LLM cost simulator — know the bill before you call the API',
+    description:
+      'CLI tool that simulates AI agent behavior to predict token usage and costs before any API call. Prompt Prediction Engine estimates files/tools an AI would use from a natural language task. Supports 15 models across OpenAI, Anthropic, Google, DeepSeek, Meta. Tiktoken + HF AutoTokenizer. Reasoning token sim, prompt caching analysis, context pressure bars, multi-turn agent loops, CI/CD enforcement, JSON reporting.',
     tech: ['Python', 'CLI', 'Tiktoken', 'HuggingFace', 'API'],
     accent: '--accent-magenta',
     icon: '◉',
@@ -29,61 +69,31 @@ const featured = [
   {
     repoName: 'Mini-Transfomer-From-Scratch',
     displayName: 'Diff2Commit',
-    tagline: 'Compact Transformer that reads diffs and writes commit messages',
+    tagline: '36M-param Transformer from scratch — diffs in, commit messages out',
     description:
-      '36.6M param encoder-decoder Transformer from scratch for commit message generation. Custom DiffEmbedding with <ADD>/<REMOVE>/<MODIFY> tags, dual Unigram+BPE vocabs, RoPE, RMSNorm, SwiGLU. Trained on filtered CommitPack with mixed-precision bfloat16, gradient checkpointing, curriculum learning, BucketBatchSampler. Benchmarked 13 decoding strategies (beam, contrastive, MMR, top-p/k) across 6 metrics.',
-    tech: ['Python', 'PyTorch', 'Transformers', 'NLP', 'ROCm', 'Cuda'],
+      'Encoder-decoder Transformer built from scratch for commit message generation. Custom DiffEmbedding with <ADD>/<REMOVE>/<MODIFY> tags, dual Unigram+BPE vocabs, RoPE, RMSNorm, SwiGLU. Trained on filtered CommitPack with bfloat16 mixed-precision, gradient checkpointing, curriculum learning, BucketBatchSampler. 13 decoding strategies benchmarked across 6 metrics.',
+    tech: ['Python', 'PyTorch', 'Transformers', 'NLP', 'ROCm', 'CUDA'],
     accent: '--accent-green',
-    icon: '◉',
+    icon: '◈',
   },
   {
     repoName: 'Nyon',
     displayName: 'Nyon Engine',
-    tagline: 'Box2D-like physics with Unity-style ECS in C++/OpenGL',
+    tagline: 'C++17 ECS 2D engine — OpenGL 4.6 GPU-instanced rendering',
     description:
-      'Custom 2D game engine in C++17 with GPU-instanced OpenGL 4.6 rendering (persistent-mapped buffers, triple-buffering, GLsync fences). Pure ECS with SoA component storage, O(1) access, entity recycling. Custom rigid-body physics: Dynamic AABB Tree broad-phase, SAT narrow-phase, island simulation, warm-starting, sequential impulses. Work-stealing thread pool, 4M particle system, 4 playable demos.',
+      'Custom 2D game engine with GPU-instanced OpenGL 4.6 rendering (persistent-mapped buffers, triple-buffering, GLsync fences). Pure ECS with SoA storage, O(1) access, entity recycling. Custom rigid-body physics (Dynamic AABB Tree, SAT, sequential impulses). Work-stealing thread pool, 4M-particle system, 4 playable demos.',
     tech: ['C++', 'OpenGL', 'ECS', 'Physics', 'GLFW', 'GPU'],
     accent: '--accent-amber',
     icon: '⬡',
   },
   {
-    repoName: 'KhojAI',
-    displayName: 'KhojAI',
-    tagline: 'AI-powered search with RAG, real-time web, and multi-platform',
-    description:
-      'Full-stack AI search platform: Java Spring Boot backend, Python FastAPI AI engine, Next.js web, Flutter mobile. Hybrid retrieval: spaCy NER, KeyBERT, YAKE, BM25, WordNet semantic expansion, Google Programmable Search. Asynchronous web scraping with 3 strategies. SSE streaming with 9 event types for live pipeline visualization. JWT auth, PostgreSQL, circuit breakers, disk caching.',
-    tech: ['Java', 'Spring Boot', 'Python', 'FastAPI', 'Next.js', 'Flutter', 'PostgreSQL', 'Ollama'],
-    accent: '--accent-cyan',
-    icon: '◇',
-  },
-  {
-    repoName: 'my-html-project',
-    displayName: 'FundMyIdea BD',
-    tagline: 'AI-enhanced crowdfunding for student entrepreneurs',
-    description:
-      'Full-stack crowdfunding platform with Node.js/Express/MongoDB. Drag-and-drop campaign page builder, custom reward tiers, WebSocket real-time donation tracking, AI-powered campaign recommendations, analytics dashboard (funding trends, visitor metrics, conversion stats). bKash integration, JWT auth, CSRF protection, dark mode, gamification, responsive design.',
-    tech: ['Node.js', 'Express', 'MongoDB', 'WebSocket', 'EJS', 'JavaScript'],
-    accent: '--accent-magenta',
-    icon: '◎',
-  },
-  {
-    repoName: 'Raycaster-OpenGL',
-    displayName: 'Raycaster OpenGL',
-    tagline: 'GPU-accelerated Wolfenstein-style raycasting engine',
-    description:
-      'C++/OpenGL 3.3 raycaster with DDA raycasting in GLSL fragment shaders. Textured walls/floors, panoramic sky, distance fog. WASD movement, mouse look, jumping, 4-weapon system with projectile rendering. Minimap overlay with ray visualization. Visual map editor with undo/redo. Data-driven JSON config. Self-contained portable build.',
-    tech: ['C++', 'OpenGL', 'GLFW', 'GLAD', 'Graphics'],
-    accent: '--accent-green',
-    icon: '⬢',
-  },
-  {
     repoName: 'Auto-Git-Handler-Hub',
     displayName: 'AGHH',
-    tagline: 'TUI-based Git management and automation hub',
+    tagline: 'TUI Git management and automation hub',
     description:
-      'Terminal-based Git management platform with Dialog TUI framework. Auto-scans repos, integrates GitHub CLI, provides repository insights and conflict resolution. Cross-platform installer (Linux/macOS) with auto-dependency detection. Features file management, backup/export, analytics, customizable settings. Python ML integration for future AI-assisted workflows.',
+      'Terminal-based Git management platform with Dialog TUI framework. Auto-scans repos, integrates GitHub CLI, provides repository insights and conflict resolution. Cross-platform installer (Linux/macOS) with auto-dependency detection. File management, backup/export, analytics, customizable settings.',
     tech: ['Bash', 'Python', 'Dialog', 'Git', 'Linux'],
-    accent: '--accent-amber',
+    accent: '--accent-cyan',
     icon: '◇',
   },
 ];

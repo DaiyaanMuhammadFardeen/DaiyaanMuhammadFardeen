@@ -1,5 +1,5 @@
 /**
- * main.js — Neural Terminal Portfolio Orchestrator
+ * main.js — Frontend.Systems Portfolio Orchestrator
  * Daiyaan Muhammad Fardeen
  *
  * Boot order:
@@ -33,8 +33,8 @@ console.log(
   '%c  ██║ ╚████║   ██║   ╚██████╔╝██║ ╚████║\n' +
   '%c  ╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝\n' +
   '%c\n' +
-  '%c  Daiyaan Muhammad Fardeen — AI Engineer & Systems Programmer\n' +
-  '%c  neural-terminal v2.4.1 — booting...\n',
+  '%c  Daiyaan Muhammad Fardeen — Full-Stack Web Developer · ML Engineer\n' +
+  '%c  frontend.systems v3.0.0 — booting...\n',
   'color: #00e5ff', 'color: #00e5ff', 'color: #ff00aa', 'color: #00e5ff',
   'color: #ff00aa', 'color: #00e5ff', '',
   'color: #7878a8', 'color: #3a3a5c'

@@ -16,6 +16,7 @@ export function initHero() {
 
   // Grab elements
   const eyebrow = document.getElementById('hero-eyebrow');
+  const title = document.getElementById('hero-title');
   const subtitle = document.getElementById('hero-subtitle');
   const cta = document.getElementById('hero-cta');
   const scrollIndicator = document.getElementById('scroll-indicator');
@@ -30,6 +31,10 @@ export function initHero() {
     if (eyebrow) {
       eyebrow.style.opacity = '1';
       eyebrow.style.transform = 'translateY(0)';
+    }
+    if (title) {
+      title.style.opacity = '1';
+      title.style.transform = 'translateY(0)';
     }
     if (subtitle) {
       subtitle.style.opacity = '1';
@@ -58,6 +63,15 @@ export function initHero() {
       eyebrow.style.opacity = '1';
       eyebrow.style.transform = 'translateY(0)';
     });
+  }
+
+  // 1b. Fade in title after eyebrow
+  if (title) {
+    setTimeout(() => {
+      title.style.transition = 'opacity 600ms ease, transform 600ms ease';
+      title.style.opacity = '1';
+      title.style.transform = 'translateY(0)';
+    }, 200);
   }
 
   // 2. Show subtitle (after 200ms delay)
