@@ -1,0 +1,25 @@
+Daiyaan Muhammad Fardeen
+daiyaan.muhammad2002@gmail.com | +8801518972324 | Nandipara, Dhaka | LinkedIn | GitHub
+
+July 16, 2026
+
+Hiring Manager
+[Company Name]
+[Company Address]
+
+Subject: Application for Full Stack Intern Position
+
+Dear Hiring Manager,
+
+I am writing to express my strong interest in the Full Stack Intern position at [Company Name]. As a Computer Science and Engineering student at Daffodil International University with a 3.72/4.0 GPA and hands-on experience building production-grade full-stack systems, I am excited about the opportunity to contribute to your engineering team while continuing to grow as a developer.
+
+Throughout my academic and project work, I have developed a deep, end-to-end understanding of modern full-stack development. I have built and shipped multiple full-stack applications, including CVTailor, an AI-powered CV tailoring engine with a FastAPI backend, Next.js 16 dashboard, PostgreSQL with pgvector, JWT authentication, and SSE streaming. I also built KhojAI, a multi-service platform combining Java Spring Boot, Python FastAPI, Next.js, and Flutter, with hybrid NLP pipelines, intent detection, and concurrent web scraping. Most recently, I have been designing Domio, a polyglot full-stack presentation platform with Figma-grade canvas editing, a Model Context Protocol (MCP) server for AI agents, ClickHouse-powered analytics, and a deckctl CLI for CI-driven deck deployment. These projects have given me strong proficiency across React, Next.js, TypeScript, JavaScript, Spring Boot, FastAPI, PostgreSQL, MySQL, MongoDB, Docker, and RESTful API design.
+
+I am particularly drawn to this internship because I want to apply my skills in a collaborative, production-focused environment where I can learn from experienced engineers while contributing meaningfully from day one. I am comfortable working across the entire stack — from designing APIs and database schemas to building responsive, accessible frontends — and I care deeply about writing clean, maintainable code, thoughtful system design, and performance optimization. My experience with microservices architecture, event-driven systems, scripting, and version control has prepared me to integrate quickly into an established engineering workflow.
+
+Beyond my technical skills, I bring a strong sense of ownership and a track record of delivering under pressure. I led a team of 10 students through Python and Machine Learning instruction as a Student Associate at Daffodil International University, managed end-to-end logistics as a Voluntary Relief Distributor during the 2022 Sylhet floods, and competed against 800+ teams in the SUST CSE Carnival Codex Community Hackathon (43rd place) and 500+ students in the Unlock The Algorithm contest (9th place). These experiences have shaped me into a collaborative, reliable, and communicating engineer who thrives in team environments.
+
+I would welcome the opportunity to discuss how my technical background, project experience, and enthusiasm for full-stack development align with your team's needs. I am available for an interview at your earliest convenience and have attached my resume for your review. Thank you for considering my application — I look forward to the possibility of contributing to [Company Name].
+
+Sincerely,
+Daiyaan Muhammad Fardeen
